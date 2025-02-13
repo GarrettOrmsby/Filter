@@ -58,13 +58,13 @@ app.listen(PORT, () => {
 
 app.get('/api/artist-albums', async (req, res) => {
     try {
-        const { lastfm, spotify } = await getTopArtistsWithCache();
-        const topFiveNames = lastfm
+        const lastfmArtists = await getTopArtistsWithCache();
+        const topFiveNames = lastfmArtists
             .slice(0, 5)
             .map(artist => artist.name);
-        
+
         const spotifyAlbums = await getArtistAlbums(topFiveNames);
-        
+        console.log('Albums fetched:', spotifyAlbums);
         res.json(spotifyAlbums);
     } catch (error) {
         res.status(500).json({

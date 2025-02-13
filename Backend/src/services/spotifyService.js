@@ -91,6 +91,13 @@ async function searchArtist(artistName) {
     }
 }
 
+let artistInfoCache = {
+    data: null,
+    timestamp: null,
+};
+
+const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+
 async function getArtistsInfo(artistNames) {
     try {
         // Map each artist name to a search promise
@@ -117,50 +124,51 @@ async function getArtistsInfo(artistNames) {
 
 async function getArtistAlbums(artistNames) {
     try {
-        const cachedSpotifyArtists = getCachedSpotifyArtists();
-        const allArtistAlbums = [];
+        let artistsInfo;
 
-        for (const artistName of artistNames) {
-            // Find artist in cache
-            const cachedArtist = cachedSpotifyArtists.find(
-                artist => artist.name.toLowerCase() === artistName.toLowerCase()
-            );
+        if (artistInfoCache.data &&
+            artistInfoCache.timestamp &&
+            (Date.now() - artistInfoCache.timestamp < CACHE_DURATION)) {
+            console.log('Using cached artist info');
+            artistsInfo = artistInfoCache.data;
+        } else {
+            artistsInfo = await getArtistsInfo(artistNames);
+            artistInfoCache = {
+                data: artistsInfo,
+                timestamp: Date.now()
+            };
+    }
 
-            if (cachedArtist) {
-                // Use cached Spotify ID
-                const albumsResponse = await makeSpotifyRequest(
-                    `artists/${cachedArtist.id}/albums`,
-                    {
-                        include_groups: 'album,single',
-                        limit: 50,
-                        market: 'US'
-                    }
-                );
-
-                allArtistAlbums.push({
-                    artistName,
-                    artistInfo: cachedArtist, // Include cached artist info
-                    albums: albumsResponse.items.map(album => ({
-                        id: album.id,
-                        name: album.name,
-                        releaseDate: album.release_date,
-                        totalTracks: album.total_tracks,
-                        images: {
-                            small: album.images[2]?.url,
-                            medium: album.images[1]?.url,
-                            large: album.images[0]?.url
-                        },
-                        type: album.album_type,
-                        spotifyUrl: album.external_urls.spotify
-                    }))
-                });
+    const artistsAlbums = await Promise.all(artistsInfo.map(async artist => {
+        const albumsResponse =  await makeSpotifyRequest(
+            `artists/${artist.id}/albums`,
+            {
+                include_groups: 'album',
+                limit: 50,
+                market: 'US'
             }
-        }
+        );
 
-        return allArtistAlbums;
+        return {
+            name: artist.name,
+            images: artist.images,
+            albums: albumsResponse.items.map(album => ({
+                id: album.id,
+                name: album.name,
+                releaseDate: album.release_date,
+                totalTracks: album.total_tracks,
+                images: album.images,
+                type: album.album_type,
+                spotifyUrl: album.external_urls.spotify
+            }))
+        };
+    }));
+
+        return artistsAlbums;
+
     } catch (error) {
-        console.error('Error fetching artist albums:', error);
-        throw error;
+        console.error('Error getting artist albums:', error);
+        throw handleSpotifyError(error);
     }
 }
 
