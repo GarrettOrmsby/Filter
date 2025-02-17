@@ -40,7 +40,7 @@ function NavBar() {
                         </a>
                     </li>
                     <li className="navitem albums-page">
-                        <Link to="/Ablums">
+                        <Link to="/albums">
                             <span>Albums</span>
                         </Link>
                     </li>

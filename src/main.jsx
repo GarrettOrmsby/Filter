@@ -8,8 +8,6 @@ import HomePage from './Frontend/pages/HomePage.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <HomePage />
-    </BrowserRouter>
+      <App />
   </StrictMode>,
 )
