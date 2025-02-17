@@ -141,12 +141,7 @@ async function getArtistAlbums(artistNames) {
 
     const artistsAlbums = await Promise.all(artistsInfo.map(async artist => {
         const albumsResponse =  await makeSpotifyRequest(
-            `artists/${artist.id}/albums`,
-            {
-                include_groups: 'album',
-                limit: 50,
-                market: 'US'
-            }
+            `artists/${artist.id}/albums?include_groups=album&market=US&limit=10`
         );
 
         return {
