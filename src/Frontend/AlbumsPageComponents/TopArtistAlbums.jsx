@@ -27,12 +27,11 @@ function TopArtistAlbums() {
                 {loading ? (
                     <p>Loading...</p>
                 ) : artistsAndAlbums.map(artist =>
-                    <div>
+                    <div key={artist.name}>
                         <h2 className="section-heading"></h2>
                     
                         <div 
-                            key={artist.name} 
-                            className="artist-container grid grid-cols-12"
+                            className="artist-container grid grid-cols-12 gap-4"
                         >
                             
                             <div className="artist-info col-span-5">
@@ -45,7 +44,7 @@ function TopArtistAlbums() {
                                     className="
                                         relative
                                         h-[300px] w-[300px]
-                                        rounded-sm
+                                        rounded-full
                                         overflow-hidden
                                         bg-cover bg-center
                                         shadow-lg
@@ -56,22 +55,33 @@ function TopArtistAlbums() {
                                 {artist.albums.slice(0,4).map(album => (
                                     <div 
                                         key={album.id} 
-                                        className="album-card"
+                                        className="album-card w-[150px] relative"
                                     >
-                                        <h4 className="text-sm font-bold">{album.name}</h4>
+                                        <h4 className="
+                                            text-sm font-bold 
+                                            w-full
+                                            truncate 
+                                            hover:whitespace-normal
+                                            hover:text-clip
+                                            transition-all
+                                            duration-200
+                                            relative z-10
+                                           
+                                        ">
+                                            {album.name}
+                                        </h4>
                                         <div
-                                            style={{ backgroundImage: `url(${album.images[0].url})`
-                                        }}
-                                        className="
-                                            relative
-                                            h-[150px] w-[150px]
-                                            rounded-sm
-                                            overflow-hidden
-                                            shadow-lg
-                                            bg-cover bg-center
-                                            group 
-                                        "
-                                    />
+                                            style={{ backgroundImage: `url(${album.images[0].url})` }}
+                                            className="
+                                                relative
+                                                h-[150px] w-[150px]
+                                                rounded-sm
+                                                overflow-hidden
+                                                shadow-lg
+                                                bg-cover bg-center
+                                                group 
+                                            "
+                                        />
                                     </div>
                                 ))}
                             </div>
