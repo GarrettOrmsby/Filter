@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = "http://localhost:3001/api";
 
@@ -52,7 +53,11 @@ function RecentlyReviewed() {
             });
     }, []);
 
+    const navigate = useNavigate();
 
+    const handleAlbumClick = (albumId) => {
+        navigate(`/album/${albumId}`);
+    }
     // Current Object example:
     return (
         <div>
@@ -62,11 +67,22 @@ function RecentlyReviewed() {
                     <p>Loading...</p>
                 ) : (
                     recentAlbums.map(album => (
-                        <div key={album.name} className="flex gap-4">
+                        <div key={album.id} className="flex gap-4">
                             <img 
                                 src={album.images.medium}
                                 alt={album.name}
-                                className="w-32 h-32 object-cover rounded-sm"
+                                className="
+                                    w-32 h-32 
+                                    object-cover 
+                                    rounded-sm
+                                    hover:ring-2 hover:ring-black
+                                    hover:scale-103
+                                    transition-all
+                                    duration-300
+                                    ease-in-out
+                                    cursor-pointer
+                                    "
+                                onClick={() => handleAlbumClick(album.id)}
                             />
                             <div>
                                 <h3 className="font-bold">{album.name}</h3>

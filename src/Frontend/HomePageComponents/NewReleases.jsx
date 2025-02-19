@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = 'http://localhost:3001/api';
 
 function NewReleases() {
     const [releases, setReleases] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate();
+
+    const handleAlbumClick = (albumId) => {
+        navigate(`/album/${albumId}`);
+    }
 
     useEffect(() => {
         fetch(`${API_BASE_URL}/new-releases`)
@@ -25,7 +32,10 @@ function NewReleases() {
                 {loading ? (
                     <p>Loading...</p>
                 ) : releases?.map(release => (
-                    <div key={release.id} className="flex flex-col items-center w-[180px]">
+                    <div key={release.id} 
+                        className="flex flex-col items-center w-[180px]"
+                        onClick={() => handleAlbumClick(release.id)}
+                    >
                         <div className="text-center mb-2 w-full">
                             <h3 className="text-sm font-bold truncate hover:text-clip hover:whitespace-normal">
                                 {release.name}

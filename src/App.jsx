@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './index.css'
 import HomePage from './Frontend/pages/HomePage';
 import AlbumsPage from './Frontend/pages/AlbumsPage';
-import NavBar from './Frontend/HomePageComponents/NavBar';
+import ReviewPage from './Frontend/pages/ReviewPage';
 
 function App() {
 
@@ -12,6 +12,7 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/albums' element={<AlbumsPage />} />
+        <Route path='/album/:id' element={<ReviewPage />} />
       </Routes>
     </Router>
     

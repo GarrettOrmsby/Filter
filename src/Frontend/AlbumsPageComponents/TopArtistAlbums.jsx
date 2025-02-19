@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const API_BASE_URL = 'http://localhost:3001/api';
 
 function TopArtistAlbums() {
     const [artistsAndAlbums, setArtistsAndAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate();
+
+    const handleAlbumClick = (albumId) => {
+        navigate(`/album/${albumId}`);
+    }
 
     useEffect(() => {
         fetch(`${API_BASE_URL}/artist-albums`)
@@ -48,6 +54,10 @@ function TopArtistAlbums() {
                                         overflow-hidden
                                         bg-cover bg-center
                                         shadow-lg
+                                        hover:shadow-xl
+                                        transition-shadow
+                                        duration-300
+                                        cursor-pointer
                                     "
                                 />
                             </div>
@@ -56,6 +66,7 @@ function TopArtistAlbums() {
                                     <div 
                                         key={album.id} 
                                         className="album-card w-[150px] relative"
+                                        onClick={() => handleAlbumClick(album.id)}
                                     >
                                         <h4 className="
                                             text-sm font-bold 
@@ -66,6 +77,8 @@ function TopArtistAlbums() {
                                             transition-all
                                             duration-200
                                             relative z-10
+                                            pb-[5px]
+                                            
                                            
                                         ">
                                             {album.name}
@@ -80,6 +93,12 @@ function TopArtistAlbums() {
                                                 shadow-lg
                                                 bg-cover bg-center
                                                 group 
+                                                hover:ring-2 hover:ring-black
+                                                hover:scale-103
+                                                transition-all
+                                                duration-300
+                                                ease-in-out
+                                                cursor-pointer
                                             "
                                         />
                                     </div>

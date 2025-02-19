@@ -10,6 +10,7 @@ function parseReleaseData(data) {
         name: album.name,
         artist: album.artists[0].name,
         albumUrl: album.external_urls.spotify,
+        id: album.id,
         images: {
             small: album.images[1].url,
             medium: album.images[0].url,
