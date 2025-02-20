@@ -6,8 +6,12 @@ function AlbumsPage() {
     return (
         <div>
             <NavBar />
-            <TopArtistAlbums />
-            <RecentlyReviewed />
+            <main>
+                <div className="max-w-5xl mx-auto px-4 space-y-8">
+                    <TopArtistAlbums />
+                    <RecentlyReviewed />
+                </div>
+            </main>
         </div>
     )
 }

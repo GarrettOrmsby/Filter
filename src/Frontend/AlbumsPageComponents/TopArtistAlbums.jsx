@@ -34,16 +34,13 @@ function TopArtistAlbums() {
                     <p>Loading...</p>
                 ) : artistsAndAlbums.map(artist =>
                     <div key={artist.name}>
-                        <h2 className="section-heading"></h2>
+                        <h2 className="section-heading">{artist.name}</h2>
                     
                         <div 
                             className="artist-container grid grid-cols-12 gap-4"
                         >
                             
                             <div className="artist-info col-span-5">
-                                <h3 className="text-lg font-bold">
-                                    {artist.name}
-                                </h3>
                                 <div 
                                     key={artist.id} 
                                     style={{ backgroundImage: `url(${artist.images[0].url})`}}
@@ -78,8 +75,6 @@ function TopArtistAlbums() {
                                             duration-200
                                             relative z-10
                                             pb-[5px]
-                                            
-                                           
                                         ">
                                             {album.name}
                                         </h4>
