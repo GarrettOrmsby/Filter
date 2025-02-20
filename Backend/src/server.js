@@ -1,9 +1,11 @@
-import express from 'express';
+import express, { application } from 'express';
+import { useParams } from 'react-router-dom';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { getTopArtistsWithCache } from './services/artistsCache.js';
 import { getArtistsInfo, getArtistAlbums } from './services/spotifyService.js';
 import { getNewReleasesWithCache } from './services/newReleases.js';
+import { getAlbumWithCache } from './services/albumService.js';
 
 dotenv.config();
 
@@ -70,6 +72,29 @@ app.get('/api/artist-albums', async (req, res) => {
         res.status(500).json({
             error: 'Failed to fetch artist albums',
             details: error.message
+        });
+    }
+});
+
+app.get('/api/album/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log('Received request for album:', id);
+        
+        const album = await getAlbumWithCache(id);
+        console.log('Album data retrieved:', album ? 'success' : 'null');
+        
+        if (!album) {
+            console.log('Album not found');
+            return res.status(404).json({ error: 'Album not found' });
+        }
+        
+        res.json(album);
+    } catch (error) {
+        console.error('Error in /api/album/:id:', error);
+        res.status(500).json({ 
+            error: 'Failed to fetch album',
+            details: error.message 
         });
     }
 });

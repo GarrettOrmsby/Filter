@@ -167,10 +167,33 @@ async function getArtistAlbums(artistNames) {
     }
 }
 
+async function getAlbumById(albumId) {
+    try {
+        const albumRespone = await makeSpotifyRequest(`albums/${albumId}?market=US`);
+        return {
+            artistName: albumRespone.artists[0].name,
+            albumName: albumRespone.name,
+            releaseDate: albumRespone.release_date,
+            totalTracks: albumRespone.total_tracks,
+            images: albumRespone.images,
+            spotifyUrl: albumRespone.external_urls.spotify,
+            tracks: albumRespone.tracks.items.map(track => ({
+                trackName: track.name,
+                trackNumber: track.track_number,
+                duration: track.duration_ms,
+                spotifyUrl: track.external_urls.spotify
+            }))
+        }
+    } catch (error) {
+        throw handleSpotifyError(error);
+    }
+}
+
 export { 
     getAccessToken, 
     makeSpotifyRequest, 
     searchArtist, 
     getArtistsInfo,
-    getArtistAlbums
+    getArtistAlbums,
+    getAlbumById
 };

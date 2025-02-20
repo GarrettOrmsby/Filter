@@ -50,6 +50,12 @@ function NewReleases() {
                                 h-[150px] w-[150px] 
                                 rounded-sm 
                                 bg-cover bg-center
+                                hover:ring-2 hover:ring-black
+                                hover:scale-103
+                                transition-all
+                                duration-300
+                                ease-in-out
+                                cursor-pointer
                             "
                         />
                     </div>

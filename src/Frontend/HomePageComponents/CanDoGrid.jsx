@@ -7,8 +7,6 @@ import playlist from '../../assets/playlist.png';
 import star from '../../assets/star-half.png';
 
 
-
-
 function CanDoGrid() {
     const cards = [
         {color: "bg-blue-500", icon: star, description: "Rate each album"},
