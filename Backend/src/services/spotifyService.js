@@ -169,22 +169,32 @@ async function getArtistAlbums(artistNames) {
 
 async function getAlbumById(albumId) {
     try {
-        const albumRespone = await makeSpotifyRequest(`albums/${albumId}?market=US`);
+        const albumResponse = await makeSpotifyRequest(`albums/${albumId}?market=US`);
+        console.log('Spotify API Response:', albumResponse); // Debug log
+
+        // Check if we have the required data
+        if (!albumResponse?.artists?.[0]) {
+            throw new Error('Album artist data not found');
+        }
+
         return {
-            artistName: albumRespone.artists[0].name,
-            albumName: albumRespone.name,
-            releaseDate: albumRespone.release_date,
-            totalTracks: albumRespone.total_tracks,
-            images: albumRespone.images,
-            spotifyUrl: albumRespone.external_urls.spotify,
-            tracks: albumRespone.tracks.items.map(track => ({
+            artistName: albumResponse.artists[0].name,
+            // Safely access artist image with fallback
+            artists: albumResponse.artists,
+            albumName: albumResponse.name,
+            releaseDate: albumResponse.release_date,
+            totalTracks: albumResponse.total_tracks,
+            images: albumResponse.images || [],
+            spotifyUrl: albumResponse.external_urls?.spotify,
+            tracks: albumResponse.tracks.items.map(track => ({
                 trackName: track.name,
                 trackNumber: track.track_number,
                 duration: track.duration_ms,
-                spotifyUrl: track.external_urls.spotify
+                spotifyUrl: track.external_urls?.spotify
             }))
         }
     } catch (error) {
+        console.error('Error in getAlbumById:', error);
         throw handleSpotifyError(error);
     }
 }

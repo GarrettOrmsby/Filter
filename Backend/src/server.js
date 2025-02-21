@@ -6,6 +6,7 @@ import { getTopArtistsWithCache } from './services/artistsCache.js';
 import { getArtistsInfo, getArtistAlbums } from './services/spotifyService.js';
 import { getNewReleasesWithCache } from './services/newReleases.js';
 import { getAlbumWithCache } from './services/albumService.js';
+import { searchArtist } from './services/spotifyService.js';
 
 dotenv.config();
 
@@ -95,6 +96,52 @@ app.get('/api/album/:id', async (req, res) => {
         res.status(500).json({ 
             error: 'Failed to fetch album',
             details: error.message 
+        });
+    }
+});
+
+app.get('/api/artist/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log('Received request for artist:', id);
+
+        const artist = await getArtistsInfo(id);
+        console.log('Artist data retrieved:', artist ? 'success' : 'null');
+
+        if (!artist) {
+            console.log('Artist not found');
+            return res.status(404).json({ error: 'Artist not found' });
+        }
+
+        res.json(artist);
+    } catch (error) {
+        console.error('Error in /api/artist/:id:', error);
+        res.status(500).json({
+            error: 'Failed to fetch artist',
+            details: error.message
+        });
+    }
+});
+
+app.get('/api/search-artist/:name', async (req, res) => {
+    try {
+        const { name } = req.params;
+        console.log('Searching for artist:', name);
+
+        const artist = await searchArtist(name);
+        console.log('Artist data retrieved:', artist ? 'success' : 'null');
+
+        if (!artist) {
+            console.log('Artist not found');
+            return res.status(404).json({ error: 'Artist not found' });
+        }
+
+        res.json(artist);
+    } catch (error) {
+        console.error('Error in /api/search-artist/:name:', error);
+        res.status(500).json({
+            error: 'Failed to search artist',
+            details: error.message
         });
     }
 });

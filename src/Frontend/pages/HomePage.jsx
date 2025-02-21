@@ -10,7 +10,7 @@ function HomePage() {
         <div className="min-h-screen relative">  {/* Container for everything */}
             {/* Header Image as background */}
             <div className="absolute top-0 left-0 right-0 h-[675px]">
-                <HeaderImage />
+                <HeaderImage id={null}/>
             </div>
 
             {/* Content container */}
