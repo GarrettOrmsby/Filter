@@ -42,40 +42,30 @@ function ReviewPage() {
 
     if (error) return <div>Error: {error}</div>;
     if (!album || !artistImage) return <div>Loading...</div>;
-
+    console.log(album);
     return (
-        <div className="min-h-screen bg-[#201b2b]">
-            {/* Fixed position NavBar */}
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <NavBar />
-                </div>
-            </nav>
-
-            {/* Header Image Section */}
-            <div className="h-[675px] relative">
+        <div className="min-h-screen relative">
+            <div className="absolute top-0 left-0 right-0 max-w-5xl mx-auto h-[675px]">
                 <HeaderImage artistImage={artistImage} />
             </div>
 
-            {/* Main Content */}
-            <div className="
-                max-w-7xl 
-                mx-auto 
-                px-4 
-                sm:px-6 
-                lg:px-8
-                py-8
-                relative
-                -mt-0
-            ">
-                <div className="grid grid-cols-[350px_1fr] gap-4">
-                    <div className="space-y-6">
-                        <AlbumImageAndCounts album={album} />
+            <div className="relative z-10">
+                <nav>
+                    <NavBar />
+                </nav>
+
+                <main className="pt-[675px]">
+                    <div className="max-w-6xl min-w-6xlmx-auto px-4">
+                        <div className="grid grid-cols-[300px_1fr] gap-4">
+                            <div className="space-y-6">
+                                <AlbumImageAndCounts album={album} />
+                            </div>
+                            <div>
+                                <ReviewSection album={album} />
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <ReviewSection album={album} />
-                    </div>
-                </div>
+                </main>
             </div>
         </div>
     );

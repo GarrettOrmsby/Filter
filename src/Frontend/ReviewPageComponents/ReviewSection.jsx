@@ -58,6 +58,10 @@ function ReviewSection({ album }) {
     return (
         <div className="review-section grid grid-cols-[2fr_1fr] gap-8">
             <div className="review-box flex flex-col gap-4">
+                <div className="title-section flex flex-col gap-2">
+                    <h1 className="text-3xl font-bold text-headingColor">{album.albumName}</h1>
+                    <h2 className="section-heading text-sm text-darkTeal">{album.artists[0].name}</h2>
+                </div>
                 <div className="w-full h-[300px]">
                     <textarea 
                         placeholder="Write a review" 
@@ -80,13 +84,14 @@ function ReviewSection({ album }) {
                 </div>
                 <button className="
                     w-fit
-                    bg-black
-                    text-white
+                    bg-lightTeal
+                    bg-gradient-to-r from-lightTeal to-darkTeal
+                    text-backgroundColor
                     px-4
                     py-2
                     text-sm
                     rounded-md
-                    hover:bg-gray-800
+                    hover:bg-darkTeal
                     transition-colors
                     ml-4
                 ">

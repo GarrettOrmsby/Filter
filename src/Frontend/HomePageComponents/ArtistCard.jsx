@@ -42,10 +42,10 @@ function ArtistCard() {
                             shadow-lg
                         "
                     >
-                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                            <h2 className="text-2xl font-bold text-white">{artist.name}</h2>
-                            <p className="text-gray-200">Popularity: {artist.popularity}</p>
-                            <p className="text-gray-200">Listeners: {Number(artist.listeners).toLocaleString()}</p>
+                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                            <h2 className="text-2xl font-bold text-headingColor">{artist.name}</h2>
+                            <p className="text-paragraphColor">Popularity: {artist.popularity}</p>
+                            <p className="text-paragraphColor">Listeners: {Number(artist.listeners).toLocaleString()}</p>
 
                         </div>
                     </div>

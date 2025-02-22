@@ -7,10 +7,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#2a2438',
-        secondary: '#352f44',
-        accent: '#5c5470',
-        background: '#dbd8e3',
+        backgroundColor: '#14181c',
+        headingColor: '#fff',
+        paragraphColor: '#9ab',
+        lighterGray: '#333f44',
+        darkTeal: '#37aa9c',
+        lightTeal: '#94f3e4',
       },
       scale: {
         '102': '1.02',

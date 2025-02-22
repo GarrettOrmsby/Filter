@@ -31,16 +31,16 @@ function HeaderImage({ artistImage = null }) {
                             backgroundImage: `url(${headerImage})`,
                         }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#201b2b] opacity-100" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-backgroundColor opacity-100" />
                     <div 
                         className="absolute inset-0"
                         style={{
                             background: `linear-gradient(
                                 to right,
-                                #201b2b 0%,
+                                #14181c 0%,
                                 transparent 5%,
                                 transparent 95%,
-                                #201b2b 100%
+                                #14181c 100%
                             )`,
                             opacity: 1
                         }}
@@ -50,7 +50,7 @@ function HeaderImage({ artistImage = null }) {
                         style={{
                             background: `linear-gradient(
                                 to bottom,
-                                rgba(32, 27, 43, 0.7) 0%,
+                                #14181c 0%,
                                 transparent 25%
                             )`,
                             opacity: 0.8

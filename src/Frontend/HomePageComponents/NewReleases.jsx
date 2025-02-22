@@ -37,10 +37,10 @@ function NewReleases() {
                         onClick={() => handleAlbumClick(release.id)}
                     >
                         <div className="text-center mb-2 w-full">
-                            <h3 className="text-sm font-bold truncate hover:text-clip hover:whitespace-normal">
+                            <h3 className="text-md font-[700]  text-paragraphColor truncate hover:text-clip hover:whitespace-normal">
                                 {release.name}
                             </h3>
-                            <p className="text-sm text-gray-400 truncate hover:text-clip hover:whitespace-normal">
+                            <p className="text-sm text-darkTeal truncate hover:text-clip hover:whitespace-normal">
                                 {release.artist}
                             </p>
                         </div>
@@ -50,8 +50,8 @@ function NewReleases() {
                                 h-[150px] w-[150px] 
                                 rounded-sm 
                                 bg-cover bg-center
-                                hover:ring-2 hover:ring-black
-                                hover:scale-103
+                                hover:outline hover:outline-3 hover:outline-darkTeal
+                                hover:outline-offset-[-2px]
                                 transition-all
                                 duration-300
                                 ease-in-out

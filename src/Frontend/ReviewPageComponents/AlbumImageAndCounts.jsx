@@ -10,7 +10,6 @@ function AlbumImageAndCounts({ album }) {
         window.open(spotifyUrl, '_blank');
     };
 
-    // Access tracks directly since we transformed it in spotifyService
     const tracks = album.tracks;
     const trackList = tracks.map((track, index) => (
         <div 
@@ -18,12 +17,13 @@ function AlbumImageAndCounts({ album }) {
             className={`
                 track-list-item
                 p-2
-                hover:bg-gray-100
                 cursor-pointer
-                ${index !== tracks.length - 1 ? 'border-b border-gray-200' : ''}
+                ${index !== tracks.length - 1 ? 'border-b border-gray-100' : ''}
             `}
             onClick={() => handleTrackClick(track.spotifyUrl)}>
-            <p className="text-sm text-gray-400">{track.trackName}</p>
+            <p className="text-sm text-paragraphColor hover:text-darkTeal transition-colors">
+                {track.trackName}
+            </p>
         </div>
     ));
 
@@ -38,7 +38,8 @@ function AlbumImageAndCounts({ album }) {
                         w-[250px] h-[250px]
                         overflow-hidden
                         bg-cover bg-center
-                        shadow-lg
+                        shadow-xl
+                        rounded-sm
                     "
                 />
             </div>
@@ -59,9 +60,12 @@ function AlbumImageAndCounts({ album }) {
             <div className="
                 track-list
                 border border-gray-200
-                rounded-md
+                rounded-sm
                 overflow-hidden
             ">
+                <div className="bg-gray-300 p-2 border-b border-gray-200">
+                    <p className="text-sm font-semibold text-gray-800">Track List</p>
+                </div>
                 {trackList}
             </div>
         </div>

@@ -50,8 +50,8 @@ function TopArtistAlbums() {
                                         rounded-full
                                         overflow-hidden
                                         bg-cover bg-center
-                                        shadow-lg
-                                        hover:shadow-xl
+                                        shadow-[0_4px_12px_rgba(0,0,0,0.7)]
+                                        hover:shadow-[0_8px_24px_rgba(0,0,0,0.8)]
                                         transition-shadow
                                         duration-300
                                         cursor-pointer
