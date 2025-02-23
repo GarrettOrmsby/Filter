@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import heart from '../../assets/heart.png';
 import heartoutline from '../../assets/heart-outline.png';
 import starrefilled from '../../assets/star-refilled.png';
 import starhalf from '../../assets/star-half.png';
+
 
 function ReviewSection({ album }) {
     const [isLiked, setIsLiked] = useState(false);
@@ -17,6 +19,12 @@ function ReviewSection({ album }) {
     const handleStarClick = (starIndex, isHalfStar) => {
         setRating(starIndex + (isHalfStar ? 0.5 : 1));
     };
+
+    const navigate = useNavigate();
+
+    const handleArtistClick = (artistId) => {
+        navigate(`/artist/${artistId}`);
+    }
 
     const renderStars = () => {
         const stars = [];
@@ -60,9 +68,21 @@ function ReviewSection({ album }) {
             <div className="review-box flex flex-col gap-4">
                 <div className="title-section flex flex-col gap-2">
                     <h1 className="text-3xl font-bold text-headingColor">{album.albumName}</h1>
-                    <h2 className="section-heading text-sm text-darkTeal">{album.artists[0].name}</h2>
+                    <h2 className="
+                        section-heading 
+                        text-sm 
+                        text-darkTeal
+                        cursor-pointer
+                        hover:underline
+                        hover:text-darkTeal/80
+                        transition-colors
+                        duration-300
+                        "
+                        onClick={() => handleArtistClick(album.artists[0].id)}>
+                            {album.artists[0].name}
+                    </h2>
                 </div>
-                <div className="w-full h-[300px]">
+                <div className="w-full h-[250px]">
                     <textarea 
                         placeholder="Write a review" 
                         value={reviewText}
@@ -106,7 +126,7 @@ function ReviewSection({ album }) {
                     overflow-hidden
                     divide-y divide-gray-200
                 ">
-                    <div className="flex items-center p-3 gap-4">
+                    <div className="flex items-center p-3 gap-4 bg-gray-400">
                         <div className="like-button">
                             <button 
                                 onClick={() => setIsLiked(!isLiked)}

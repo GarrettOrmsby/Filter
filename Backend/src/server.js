@@ -145,3 +145,27 @@ app.get('/api/search-artist/:name', async (req, res) => {
         });
     }
 });
+
+app.get('/api/specific-artist-albums/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log('Received request for artist:', id);
+
+        
+        const artist = await getArtistAlbums(id);
+        console.log('Artist data retrieved:', artist ? 'success' : 'null');
+
+        if (!artist) {
+            console.log('Artist not found');
+            return res.status(404).json({ error: 'Artist not found' });
+        }
+
+        res.json(artist);
+    } catch (error) {
+        console.error('Error in /api/specific-artist-albums/:id:', error);
+        res.status(500).json({
+            error: 'Failed to fetch artist albums',
+            details: error.message
+        });
+    }
+});

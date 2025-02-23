@@ -75,12 +75,13 @@ function RecentlyReviewed() {
                                     w-32 h-32 
                                     object-cover 
                                     rounded-sm
-                                    hover:ring-2 hover:ring-black
-                                    hover:scale-103
+                                    hover:outline hover:outline-3 hover:outline-darkTeal
+                                    hover:outline-offset-[-2px]
                                     transition-all
                                     duration-300
                                     ease-in-out
                                     cursor-pointer
+                                    shadow-[0_4px_12px_rgba(0,0,0,0.7)]
                                     "
                                 onClick={() => handleAlbumClick(album.id)}
                             />

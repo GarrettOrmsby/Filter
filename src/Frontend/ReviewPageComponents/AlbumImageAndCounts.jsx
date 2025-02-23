@@ -38,7 +38,11 @@ function AlbumImageAndCounts({ album }) {
                         w-[250px] h-[250px]
                         overflow-hidden
                         bg-cover bg-center
-                        shadow-xl
+                        shadow-[0_4px_12px_rgba(0,0,0,0.7)]
+                        hover:shadow-[0_8px_24px_rgba(0,0,0,0.8)]
+                        transition-shadow
+                        duration-300
+                        cursor-pointer
                         rounded-sm
                     "
                 />
@@ -63,7 +67,7 @@ function AlbumImageAndCounts({ album }) {
                 rounded-sm
                 overflow-hidden
             ">
-                <div className="bg-gray-300 p-2 border-b border-gray-200">
+                <div className="bg-gray-400 p-2 border-b border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
                     <p className="text-sm font-semibold text-gray-800">Track List</p>
                 </div>
                 {trackList}

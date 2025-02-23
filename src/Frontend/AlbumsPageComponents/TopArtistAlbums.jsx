@@ -12,6 +12,10 @@ function TopArtistAlbums() {
         navigate(`/album/${albumId}`);
     }
 
+    const handleArtistClick = (artistId) => {
+        navigate(`/artist/${artistId}`);
+    }
+
     useEffect(() => {
         fetch(`${API_BASE_URL}/artist-albums`)
             .then(response => response.json())
@@ -56,6 +60,7 @@ function TopArtistAlbums() {
                                         duration-300
                                         cursor-pointer
                                     "
+                                    onClick={() => handleArtistClick(artist.id)}
                                 />
                             </div>
                             <div className="artist-albums col-span-7 grid grid-cols-2 gap-4">
@@ -88,8 +93,8 @@ function TopArtistAlbums() {
                                                 shadow-lg
                                                 bg-cover bg-center
                                                 group 
-                                                hover:ring-2 hover:ring-black
-                                                hover:scale-103
+                                                hover:outline hover:outline-3 hover:outline-darkTeal
+                                                hover:outline-offset-[-2px]
                                                 transition-all
                                                 duration-300
                                                 ease-in-out
