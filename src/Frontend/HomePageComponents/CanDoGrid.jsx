@@ -7,16 +7,14 @@ import playlist from '../../assets/playlist.png';
 import star from '../../assets/star-half.png';
 
 
-
-
 function CanDoGrid() {
     const cards = [
-        {color: "bg-blue-500", icon: star, description: "Rate each album"},
-        {color: "bg-red-500", icon: pencil, description: "Write, share, and read reviews about each album"},
-        {color: "bg-green-500", icon: filter, description: "Creted your own Filtered collections"},
-        {color: "bg-yellow-500", icon: playlist, description: "Display your presonal tastes and music exploration"},
-        {color: "bg-purple-500", icon: notebook, description: "Create entries in your diary to record your own "},
-        {color: "bg-orange-500", icon: spotify, description: "See personlized stats for your music"},
+        {color: "bg-darkTeal hover:bg-[#2d8a7d]", icon: star, description: "Rate each album"},
+        {color: "bg-darkTeal hover:bg-[#2d8a7d]", icon: pencil, description: "Write, share, and read reviews about each album"},
+        {color: "bg-darkTeal hover:bg-[#2d8a7d]", icon: filter, description: "Create your own Filtered collections"},
+        {color: "bg-lightTeal hover:bg-[#7dcdc1]", icon: playlist, description: "Display your presonal tastes and music exploration"},
+        {color: "bg-lightTeal hover:bg-[#7dcdc1]", icon: notebook, description: "Create entries in your diary to record your own "},
+        {color: "bg-lightTeal hover:bg-[#7dcdc1]", icon: spotify, description: "See personlized stats for your music"},
 
     ]
 

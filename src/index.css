@@ -9,20 +9,19 @@
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Arial Narrow Bold', sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 600;
   padding-top: 0px;
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #201b2b;
+  background-color: #14181c;
   
-  --tan-color: #b9a881
 
-  --primary-color: #2a2438;
-  --secondary-color: #352f44;
-  --accent-color: #5c5470;
-  --background-color: #dbd8e3;
+  --paragraph-color: #9ab;
+  --lighter-gray: #333f44;
+  --dark-teal: #37aa9c;
+  --light-teal: #94f3e4;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -33,6 +32,7 @@
 /* Target the li and its children */
 li.navitem {
   padding: 4px 2px;
+  color: #fff;
 }
 
 /* Target the links inside navitem */
@@ -56,11 +56,9 @@ li.navitem:hover Link span {
 .section-heading {
   border-bottom: 1px solid #456;
   text-align: left;
-  color: #9ab;
-  font-family: Trebuchet MS, Helvetica, sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: .075em;
+  font-family: 'Arial Narrow Bold', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: .02em;
   line-height: 5/4;
   margin-bottom: .76923077rem;
   margin-top: 0;
@@ -72,6 +70,10 @@ li.navitem:hover Link span {
   background-repeat: no-repeat;
   background-size: cover;
   box-shadow: inset 5px -46px 80px 109px #2a2438;
+}
+
+.album-body {
+  background: #14181c url(../assets/content-bg.4284ab72.png) 0 -1px repeat-x;
 }
 
 a {

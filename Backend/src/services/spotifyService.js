@@ -122,42 +122,66 @@ async function getArtistsInfo(artistNames) {
     }
 }
 
-async function getArtistAlbums(artistNames) {
+async function getArtistAlbums(artistInput) {
     try {
-        let artistsInfo;
+        // Handle single artist ID
+        if (typeof artistInput === 'string') {
+            const artist = await makeSpotifyRequest(`artists/${artistInput}`);
+            const albumsResponse = await makeSpotifyRequest(
+                `artists/${artistInput}/albums?include_groups=album&market=US&limit=10`
+            );
 
+            return {
+                name: artist.name,
+                images: artist.images,
+                id: artist.id,
+                albums: albumsResponse.items.map(album => ({
+                    id: album.id,
+                    name: album.name,
+                    releaseDate: album.release_date,
+                    totalTracks: album.total_tracks,
+                    images: album.images,
+                    type: album.album_type,
+                    spotifyUrl: album.external_urls.spotify,
+                }))
+            };
+        }
+
+        // Handle array of artist names
+        let artistsInfo;
         if (artistInfoCache.data &&
             artistInfoCache.timestamp &&
             (Date.now() - artistInfoCache.timestamp < CACHE_DURATION)) {
             console.log('Using cached artist info');
             artistsInfo = artistInfoCache.data;
         } else {
-            artistsInfo = await getArtistsInfo(artistNames);
+            artistsInfo = await getArtistsInfo(artistInput);
             artistInfoCache = {
                 data: artistsInfo,
                 timestamp: Date.now()
             };
-    }
+        }
 
-    const artistsAlbums = await Promise.all(artistsInfo.map(async artist => {
-        const albumsResponse =  await makeSpotifyRequest(
-            `artists/${artist.id}/albums?include_groups=album&market=US&limit=10`
-        );
+        const artistsAlbums = await Promise.all(artistsInfo.map(async artist => {
+            const albumsResponse = await makeSpotifyRequest(
+                `artists/${artist.id}/albums?include_groups=album&market=US&limit=10`
+            );
 
-        return {
-            name: artist.name,
-            images: artist.images,
-            albums: albumsResponse.items.map(album => ({
-                id: album.id,
-                name: album.name,
-                releaseDate: album.release_date,
-                totalTracks: album.total_tracks,
-                images: album.images,
-                type: album.album_type,
-                spotifyUrl: album.external_urls.spotify
-            }))
-        };
-    }));
+            return {
+                name: artist.name,
+                images: artist.images,
+                id: artist.id,
+                albums: albumsResponse.items.map(album => ({
+                    id: album.id,
+                    name: album.name,
+                    releaseDate: album.release_date,
+                    totalTracks: album.total_tracks,
+                    images: album.images,
+                    type: album.album_type,
+                    spotifyUrl: album.external_urls.spotify,
+                }))
+            };
+        }));
 
         return artistsAlbums;
 
@@ -167,10 +191,43 @@ async function getArtistAlbums(artistNames) {
     }
 }
 
+async function getAlbumById(albumId) {
+    try {
+        const albumResponse = await makeSpotifyRequest(`albums/${albumId}?market=US`);
+        console.log('Spotify API Response:', albumResponse); // Debug log
+
+        // Check if we have the required data
+        if (!albumResponse?.artists?.[0]) {
+            throw new Error('Album artist data not found');
+        }
+
+        return {
+            artistName: albumResponse.artists[0].name,
+            // Safely access artist image with fallback
+            artists: albumResponse.artists,
+            albumName: albumResponse.name,
+            releaseDate: albumResponse.release_date,
+            totalTracks: albumResponse.total_tracks,
+            images: albumResponse.images || [],
+            spotifyUrl: albumResponse.external_urls?.spotify,
+            tracks: albumResponse.tracks.items.map(track => ({
+                trackName: track.name,
+                trackNumber: track.track_number,
+                duration: track.duration_ms,
+                spotifyUrl: track.external_urls?.spotify
+            }))
+        }
+    } catch (error) {
+        console.error('Error in getAlbumById:', error);
+        throw handleSpotifyError(error);
+    }
+}
+
 export { 
     getAccessToken, 
     makeSpotifyRequest, 
     searchArtist, 
     getArtistsInfo,
-    getArtistAlbums
+    getArtistAlbums,
+    getAlbumById
 };

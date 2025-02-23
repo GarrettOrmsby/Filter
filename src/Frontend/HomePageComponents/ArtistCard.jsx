@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = 'http://localhost:3001/api';
 
 function ArtistCard() {
     const [artists, setArtists] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate();
+
+    const handleArtistClick = (artistId) => {
+        navigate(`/artist/${artistId}`);
+    }
 
     useEffect(() => {
         fetch(`${API_BASE_URL}/top-artists-full`)
@@ -33,19 +40,23 @@ function ArtistCard() {
                     <div 
                         key={artist.id}
                         style={{ backgroundImage: `url(${artist.images[0].url})` }}
+                        onClick={() => handleArtistClick(artist.id)}
                         className="
                             relative            
                             h-[450px] w-[450px]       
                             rounded-sm         
                             overflow-hidden      
                             bg-cover bg-center
-                            shadow-lg
+                            shadow-[0_4px_12px_rgba(0,0,0,0.7)]
+                            hover:shadow-[0_8px_24px_rgba(0,0,0,0.8)]
+                            transition-shadow
+                            duration-300
                         "
                     >
-                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                            <h2 className="text-2xl font-bold text-white">{artist.name}</h2>
-                            <p className="text-gray-200">Popularity: {artist.popularity}</p>
-                            <p className="text-gray-200">Listeners: {Number(artist.listeners).toLocaleString()}</p>
+                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                            <h2 className="text-2xl font-bold text-headingColor">{artist.name}</h2>
+                            <p className="text-paragraphColor">Popularity: {artist.popularity}</p>
+                            <p className="text-paragraphColor">Listeners: {Number(artist.listeners).toLocaleString()}</p>
 
                         </div>
                     </div>
@@ -65,10 +76,13 @@ function ArtistCard() {
                             rounded-full         
                             overflow-hidden      
                             bg-cover bg-center
-                            shadow-lg
                             group
-
+                            shadow-[0_4px_12px_rgba(0,0,0,0.7)]
+                            hover:shadow-[0_8px_24px_rgba(0,0,0,0.8)]
+                            transition-shadow
+                            duration-300
                         "
+                        onClick={() => handleArtistClick(artist.id)}
                     >
                         <div className="
                             absolute inset-0 

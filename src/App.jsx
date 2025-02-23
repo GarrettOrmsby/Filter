@@ -4,6 +4,7 @@ import './index.css'
 import HomePage from './Frontend/pages/HomePage';
 import AlbumsPage from './Frontend/pages/AlbumsPage';
 import ReviewPage from './Frontend/pages/ReviewPage';
+import ArtistPage from './Frontend/pages/ArtistPage';
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/albums' element={<AlbumsPage />} />
         <Route path='/album/:id' element={<ReviewPage />} />
+        <Route path='/artist/:id' element={<ArtistPage />} />
       </Routes>
     </Router>
     
