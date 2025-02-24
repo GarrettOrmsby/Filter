@@ -128,7 +128,7 @@ async function getArtistAlbums(artistInput) {
         if (typeof artistInput === 'string') {
             const artist = await makeSpotifyRequest(`artists/${artistInput}`);
             const albumsResponse = await makeSpotifyRequest(
-                `artists/${artistInput}/albums?include_groups=album&market=US&limit=10`
+                `artists/${artistInput}/albums?include_groups=album&market=US&limit=50`
             );
 
             return {
@@ -161,6 +161,7 @@ async function getArtistAlbums(artistInput) {
                 timestamp: Date.now()
             };
         }
+        console.log('yoyo: ',artistInfoCache);
 
         const artistsAlbums = await Promise.all(artistsInfo.map(async artist => {
             const albumsResponse = await makeSpotifyRequest(

@@ -5,7 +5,6 @@ const API_BASE_URL = 'http://localhost:3001/api';
 
 function NewReleases() {
     const [releases, setReleases] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
@@ -18,13 +17,13 @@ function NewReleases() {
             .then(response => response.json())
             .then(data => {
                 setReleases(data);
-                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching new releases:', error);
-                setLoading(false);
             });
     }, []);
+
+    let loading = false;
 
     return (
         <div className="max-w-6xl mx-auto px-4">

@@ -5,7 +5,6 @@ const API_BASE_URL = 'http://localhost:3001/api';
 
 function ArtistCard() {
     const [artists, setArtists] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
@@ -18,15 +17,12 @@ function ArtistCard() {
             .then(response => response.json())
             .then(data => {
                 setArtists(data);
-                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching top artists:', error);
-                setLoading(false);
             });
     }, []);
 
-    if (loading) return <p>Loading...</p>;
 
     // Separate top 2 artists and remaining 3
     const topTwo = artists.slice(0, 2);
@@ -48,9 +44,10 @@ function ArtistCard() {
                             overflow-hidden      
                             bg-cover bg-center
                             shadow-[0_4px_12px_rgba(0,0,0,0.7)]
-                            hover:shadow-[0_8px_24px_rgba(0,0,0,0.8)]
+                            hover:shadow-[0_8px_24px_rgba(0,0,0,1)]
                             transition-shadow
                             duration-300
+                            cursor-pointer
                         "
                     >
                         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
@@ -81,6 +78,7 @@ function ArtistCard() {
                             hover:shadow-[0_8px_24px_rgba(0,0,0,0.8)]
                             transition-shadow
                             duration-300
+                            cursor-pointer
                         "
                         onClick={() => handleArtistClick(artist.id)}
                     >
