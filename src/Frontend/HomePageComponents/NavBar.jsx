@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import SearchBar from './SearchBar';
 import SpotifyAuthModal from '../components/modals/SpotifyAuthModal/SpotifyAuth';
@@ -13,7 +13,6 @@ function NavBar() {
         setModalType(type);
         setIsModalOpen(true);
     };
-
 
     return (
         <header>

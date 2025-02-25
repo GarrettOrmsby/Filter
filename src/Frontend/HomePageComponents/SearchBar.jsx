@@ -1,12 +1,18 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 function SearchBar() {
     const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Search term:', searchTerm);
-        // TODO: Handle search logic
+        if (!searchTerm.trim()) return;
+
+        console.log(encodeURIComponent(searchTerm.trim()))
+        navigate(`/search/${encodeURIComponent(searchTerm.trim())}`);
+        setSearchTerm('');
     };
 
     return (

@@ -230,5 +230,6 @@ export {
     searchArtist, 
     getArtistsInfo,
     getArtistAlbums,
+    handleSpotifyError,
     getAlbumById
 };

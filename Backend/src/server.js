@@ -7,6 +7,7 @@ import { getArtistsInfo, getArtistAlbums } from './services/spotifyService.js';
 import { getNewReleasesWithCache } from './services/newReleases.js';
 import { getAlbumWithCache } from './services/albumService.js';
 import { searchArtist } from './services/spotifyService.js';
+import { spotifySearch } from './services/searchService.js'
 
 dotenv.config();
 
@@ -165,6 +166,30 @@ app.get('/api/specific-artist-albums/:id', async (req, res) => {
         console.error('Error in /api/specific-artist-albums/:id:', error);
         res.status(500).json({
             error: 'Failed to fetch artist albums',
+            details: error.message
+        });
+    }
+});
+
+app.get('/api/search/:query', async (req, res) => {
+    try {
+        const { query } = req.params;
+        console.log('Searching spotify:', query);
+
+        const results = await spotifySearch(query);
+        console.log('Search Results: ', results);
+
+        if (!results) {
+            console.log('Search Failed');
+            return res.status(404).json({ error: 'Search Failed'});
+        }
+
+        res.json(results);
+
+    }  catch (error) {
+        console.error('Error i /api/search/:query', error);
+        res.status(500).json({
+            error: 'Failed to search',
             details: error.message
         });
     }
