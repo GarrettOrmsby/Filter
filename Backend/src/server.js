@@ -7,7 +7,26 @@ import { getArtistsInfo, getArtistAlbums } from './services/spotifyService.js';
 import { getNewReleasesWithCache } from './services/newReleases.js';
 import { getAlbumWithCache } from './services/albumService.js';
 import { searchArtist } from './services/spotifyService.js';
-import { spotifySearch } from './services/searchService.js'
+import { spotifySearch } from './services/searchService.js';
+import sequelize from './config/database.js';
+import User, { syncUserModel } from './models/User.js';
+import authRoutes from './routes/auth.js';
+
+async function initializeDatabase() {
+    try {
+        await sequelize.authenticate();
+        console.log('Database connection established successfully');
+
+        await syncUserModel();
+
+        console.log('Databse initialization complete.');
+
+    } catch (error) {
+        console.error('Database initialization error:', error)
+    }
+}
+
+initializeDatabase();
 
 dotenv.config();
 
@@ -17,6 +36,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/auth', authRoutes);
 
 app.get('/api/top-artists-full', async (req, res) => {
     try {
@@ -194,3 +214,23 @@ app.get('/api/search/:query', async (req, res) => {
         });
     }
 });
+
+app.get('/api/users/:id', async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        // Don't send sensitive information
+        res.json({
+            id: user.id,
+            displayName: user.displayName,
+            email: user.email,
+            profileImageUrl: user.profileImageUrl
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch user' });
+    }
+});
+

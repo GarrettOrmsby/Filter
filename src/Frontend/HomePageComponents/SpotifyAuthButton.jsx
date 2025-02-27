@@ -1,10 +1,11 @@
 import { FaSpotify } from 'react-icons/fa'; // Make sure to install react-icons
 
 function SpotifyAuthButton() {
+    const API_BASE_URL = 'http://localhost:3001';
+    
     const handleSpotifyAuth = () => {
-        // Placeholder for Spotify OAuth
-        console.log('Initiating Spotify auth...');
-        // Will eventually redirect to Spotify
+        // Redirect to backend auth route
+        window.location.href = `${API_BASE_URL}/auth/spotify`;
     };
 
     return (

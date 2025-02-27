@@ -24,6 +24,8 @@
 
 ## Tech Stack
 - React
+- Vite
 - Node.js/Express
+- TailwindCSS
 - Spotify API
 - Last.fm API

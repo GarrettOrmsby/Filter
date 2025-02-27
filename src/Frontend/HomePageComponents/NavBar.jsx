@@ -3,11 +3,13 @@ import { useState } from 'react';
 import SearchBar from './SearchBar';
 import SpotifyAuthModal from '../components/modals/SpotifyAuthModal/SpotifyAuth';
 import '../../../src/index.css';
+import { useAuth } from '../context/AuthContext';
 
 
 function NavBar() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState(null);
+    const { user, logout } = useAuth();
 
     const handleOpenModal = (type) => {
         setModalType(type);
@@ -30,13 +32,31 @@ function NavBar() {
                         </Link>
                     </li>
                     <li className="navitem">
-                        <a 
-                            onClick={() => handleOpenModal('spotify')} 
-
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <span>Sign in with Spotify</span>
-                        </a>
+                        {user ? (
+                            <div className="flex items-center gap-2">
+                                {user.profileImage && (
+                                    <img 
+                                        src={user.profileImage} 
+                                        alt={user.name}
+                                        className="w-8 h-8 rounded-full" 
+                                    />
+                                )}
+                                <span>{user.name}</span>
+                                <button 
+                                    onClick={logout} 
+                                    className="text-sm text-gray-400 hover:text-white"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <a 
+                                onClick={() => handleOpenModal('spotify')} 
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <span>Sign in with Spotify</span>
+                            </a>
+                        )}
                     </li>
                     <li className="navitem albums-page">
                         <Link to="/albums">
