@@ -10,6 +10,7 @@ import { searchArtist } from './services/spotifyService.js';
 import { spotifySearch } from './services/searchService.js';
 import sequelize from './config/database.js';
 import User, { syncUserModel } from './models/User.js';
+import Review, { syncReviewModel } from './models/Review.js';
 import authRoutes from './routes/auth.js';
 
 async function initializeDatabase() {
@@ -18,8 +19,9 @@ async function initializeDatabase() {
         console.log('Database connection established successfully');
 
         await syncUserModel();
+        await syncReviewModel();
 
-        console.log('Databse initialization complete.');
+        console.log('Database initialization complete.');
 
     } catch (error) {
         console.error('Database initialization error:', error)

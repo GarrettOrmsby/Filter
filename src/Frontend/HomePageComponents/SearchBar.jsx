@@ -24,8 +24,9 @@ function SearchBar() {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search Album..."
+                placeholder="Search Album or Artist..."
                 className="
+                    text-sm
                     w-full
                     px-4
                     py-2
