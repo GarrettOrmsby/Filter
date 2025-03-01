@@ -12,6 +12,7 @@ import sequelize from './config/database.js';
 import User, { syncUserModel } from './models/User.js';
 import Review, { syncReviewModel } from './models/Review.js';
 import authRoutes from './routes/auth.js';
+import reviewRoutes from './routes/reviews.js';
 
 async function initializeDatabase() {
     try {
@@ -39,6 +40,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/auth', authRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.get('/api/top-artists-full', async (req, res) => {
     try {

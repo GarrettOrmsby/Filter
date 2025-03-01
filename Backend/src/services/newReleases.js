@@ -8,6 +8,7 @@ let lastFetch = null;
 function parseReleaseData(data) {
     return data.map(album => ({
         name: album.name,
+        type: album.album_type,
         artist: album.artists[0].name,
         albumUrl: album.external_urls.spotify,
         id: album.id,
@@ -42,12 +43,13 @@ async function getNewReleasesWithCache() {
 }
 
 async function getNewReleases() {
-    const endpoint = 'browse/new-releases?limit=10';
+    const endpoint = 'browse/new-releases?limit=30';
     
     try {
         const response = await makeSpotifyRequest(endpoint);
         const items = response.albums.items;
-        return parseReleaseData(items);
+        const data = parseReleaseData(items);
+        return data.filter(album => album.type == "album")
     } catch (error) {
         throw error;
     }

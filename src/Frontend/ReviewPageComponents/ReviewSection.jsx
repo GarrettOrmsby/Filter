@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import heart from '../../assets/heart.png';
 import heartoutline from '../../assets/heart-outline.png';
 import starrefilled from '../../assets/star-refilled.png';
@@ -11,6 +12,12 @@ function ReviewSection({ album }) {
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
     const [reviewText, setReviewText] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
     const handleStarHover = (starIndex, isHalfStar) => {
         setHoverRating(starIndex + (isHalfStar ? 0.5 : 1));
@@ -20,11 +27,89 @@ function ReviewSection({ album }) {
         setRating(starIndex + (isHalfStar ? 0.5 : 1));
     };
 
-    const navigate = useNavigate();
-
     const handleArtistClick = (artistId) => {
         navigate(`/artist/${artistId}`);
     }
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        
+        // Reset messages
+        setError('');
+        setSuccess('');
+        
+        // Validation checks
+        if (!user) {
+            setError('Please sign in to submit a review');
+            return;
+        }
+        
+        if (rating < 0.5) {
+            setError('Please provide a rating (at least half a star)');
+            return;
+        }
+        
+        if (!reviewText.trim()) {
+            setError('Please write a review');
+            return;
+        }
+        
+        // Debug album object
+        console.log('Album object:', album);
+        
+        // Determine the correct album ID and name based on the album object structure
+        const albumId = album.albumId;
+        const albumName = album.albumName;
+        
+        if (!albumId || !albumName) {
+            console.error('Missing album information:', { albumId, albumName, album });
+            setError('Missing album information. Please try again.');
+            return;
+        }
+        
+        try {
+            setIsSubmitting(true);
+            
+            const reviewData = {
+                albumId: albumId,
+                albumName: albumName,
+                albumImageUrl: album.images[0].url,
+                rating: Number(rating),
+                reviewText: reviewText
+            };
+            
+            console.log('Submitting review data:', reviewData);
+            console.log('User ID:', user.id);
+            
+            const response = await fetch('http://localhost:3001/api/reviews', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'user-id': user.id,
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(reviewData)
+            });
+            
+            const responseData = await response.json();
+            console.log('Response:', response.status, responseData);
+            
+            if (!response.ok) {
+                throw new Error(responseData.error || 'Failed to submit review');
+            }
+            
+            // Success!
+            setSuccess('Your review has been submitted!');
+            setReviewText('');
+            setRating(0);
+            
+        } catch (error) {
+            setError(error.message);
+            console.error('Error submitting review:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     const renderStars = () => {
         const stars = [];
@@ -102,20 +187,35 @@ function ReviewSection({ album }) {
                         "
                     />
                 </div>
-                <button className="
-                    w-fit
-                    bg-lightTeal
-                    bg-gradient-to-r from-lightTeal to-darkTeal
-                    text-backgroundColor
-                    px-4
-                    py-2
-                    text-sm
-                    rounded-md
-                    hover:bg-darkTeal
-                    transition-colors
-                    ml-4
-                ">
-                    Submit
+                
+                {error && (
+                    <div className="text-red-500 text-sm ml-4">{error}</div>
+                )}
+                
+                {success && (
+                    <div className="text-green-500 text-sm ml-4">{success}</div>
+                )}
+                
+                <button 
+                    className="
+                        w-fit
+                        bg-lightTeal
+                        bg-gradient-to-r from-lightTeal to-darkTeal
+                        text-backgroundColor
+                        px-4
+                        py-2
+                        text-sm
+                        rounded-md
+                        hover:bg-darkTeal
+                        transition-colors
+                        ml-4
+                        disabled:opacity-50
+                        disabled:cursor-not-allowed
+                    "
+                    onClick={handleReviewSubmit}
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
             </div>
             <div className="rate/create-buttons flex flex-col gap-4 max-w-[200px]">

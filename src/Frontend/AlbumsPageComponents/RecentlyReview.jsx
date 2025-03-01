@@ -1,54 +1,35 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { format } from 'date-fns';
 
 const API_BASE_URL = "http://localhost:3001/api";
 
-// Placeholder reviews
-const PLACEHOLDER_REVIEWS = [
-    {
-        rating: 8.5,
-        text: "A groundbreaking album that pushes boundaries while maintaining accessibility. The production is crisp and the songwriting is mature.",
-        reviewer: "MusicFan123",
-        date: "2024-03-15"
-    },
-    {
-        rating: 7.8,
-        text: "Solid effort with memorable hooks. While not revolutionary, it shows artistic growth and confident execution.",
-        reviewer: "SoundExplorer",
-        date: "2024-03-14"
-    },
-    {
-        rating: 9.2,
-        text: "An instant classic. Every track feels essential, and the sonic palette is consistently impressive.",
-        reviewer: "BeatCritic",
-        date: "2024-03-13"
-    },
-    {
-        rating: 8.0,
-        text: "Fresh and energetic with moments of brilliance. The experimental elements work surprisingly well.",
-        reviewer: "MelodyHunter",
-        date: "2024-03-12"
-    }
-];
-
 function RecentlyReviewed() {
-    const [recentAlbums, setRecentAlbums] = useState([]);
+    const [recentReviews, setRecentReviews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/new-releases`)
-            .then(response => response.json())
+        console.log('Fetching recent reviews...');
+        // Fetch recent reviews from the API
+        fetch(`${API_BASE_URL}/reviews/recent?limit=4`)
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.error || 'Failed to fetch reviews');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
-                const albumsWithReviews = data.slice(0, 4).map((album, index) => ({
-                    ...album,
-                    review: PLACEHOLDER_REVIEWS[index]
-                }));
-                console.log('Albums with reviews:', albumsWithReviews);
-                setRecentAlbums(albumsWithReviews);
+                console.log('Recent reviews:', data);
+                setRecentReviews(data);
                 setLoading(false);
             })
             .catch(error => {
-                console.error("Error fetching recently reviewed albums:", error);
+                console.error("Error fetching recent reviews:", error);
+                setError(error.message);
                 setLoading(false);
             });
     }, []);
@@ -58,19 +39,41 @@ function RecentlyReviewed() {
     const handleAlbumClick = (albumId) => {
         navigate(`/album/${albumId}`);
     }
-    // Current Object example:
+    
+    const handleUserClick = (userId) => {
+        navigate(`/user/${userId}`);
+    }
+    
+    // Format the date to a readable format
+    const formatDate = (dateString) => {
+        try {
+            return format(new Date(dateString), 'MMM d, yyyy');
+        } catch (error) {
+            return dateString;
+        }
+    }
+    
+    // Format the rating to display with one decimal place
+    const formatRating = (rating) => {
+        return parseFloat(rating).toFixed(1);
+    }
+
     return (
         <div>
             <h2 className="section-heading">Recently Reviewed Albums</h2>
             <div className="grid grid-cols-1 gap-6">
                 {loading ? (
-                    <p>Loading...</p>
+                    <p>Loading recent reviews...</p>
+                ) : error ? (
+                    <p className="text-red-500">Error: {error}</p>
+                ) : recentReviews.length === 0 ? (
+                    <p>No reviews found. Be the first to review an album!</p>
                 ) : (
-                    recentAlbums.map(album => (
-                        <div key={album.id} className="flex gap-4">
+                    recentReviews.map(review => (
+                        <div key={review.id} className="flex gap-4">
                             <img 
-                                src={album.images.medium}
-                                alt={album.name}
+                                src={review.albumImageUrl}
+                                alt={review.albumName}
                                 className="
                                     w-32 h-32 
                                     object-cover 
@@ -82,21 +85,29 @@ function RecentlyReviewed() {
                                     ease-in-out
                                     cursor-pointer
                                     shadow-[0_4px_12px_rgba(0,0,0,0.7)]
-                                    "
-                                onClick={() => handleAlbumClick(album.id)}
+                                "
+                                onClick={() => handleAlbumClick(review.albumId)}
                             />
                             <div>
-                                <h3 className="font-bold">{album.name}</h3>
-                                <p className="text-sm text-gray-600">{album.artist}</p>
+                                <h3 className="font-bold">{review.albumName}</h3>
                                 <div className="text-sm">
                                     <p className="font-semibold">
-                                        Rating: {album.review.rating}/10
+                                        Rating: {formatRating(review.rating)}/5
                                     </p>
                                     <p className="text-gray-600 mt-2">
-                                        {album.review.text}
+                                        {review.reviewText.length > 200 
+                                            ? `${review.reviewText.substring(0, 200)}...` 
+                                            : review.reviewText}
                                     </p>
                                     <p className="mt-2 text-gray-500">
-                                        Reviewed by {album.review.reviewer} on {album.review.date}
+                                        Reviewed by{' '}
+                                        <span 
+                                            className="text-darkTeal cursor-pointer hover:underline"
+                                            onClick={() => handleUserClick(review.user.id)}
+                                        >
+                                            {review.user.name}
+                                        </span>{' '}
+                                        on {formatDate(review.createdAt)}
                                     </p>
                                 </div>
                             </div>

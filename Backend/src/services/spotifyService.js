@@ -204,7 +204,7 @@ async function getAlbumById(albumId) {
 
         return {
             artistName: albumResponse.artists[0].name,
-            // Safely access artist image with fallback
+            albumId: albumResponse.id,
             artists: albumResponse.artists,
             albumName: albumResponse.name,
             releaseDate: albumResponse.release_date,

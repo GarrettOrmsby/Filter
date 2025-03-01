@@ -32,6 +32,12 @@ const Review = sequelize.define('Review', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  
+  // Album image URL (for displaying without Spotify API)
+  albumImageUrl: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
 
   // Review content
   reviewText: {
@@ -44,7 +50,7 @@ const Review = sequelize.define('Review', {
     type: DataTypes.FLOAT,
     allowNull: false,
     validate: {
-      min: 1,
+      min: 0.5,
       max: 5
     }
   },
