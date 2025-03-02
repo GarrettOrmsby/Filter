@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from 'date-fns';
+import { useAuth } from "../context/AuthContext";
+import LikeButton from "../components/LikeButton";
 
 const API_BASE_URL = "http://localhost:3001/api";
 
@@ -8,11 +10,17 @@ function RecentlyReviewed() {
     const [recentReviews, setRecentReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { user } = useAuth();
 
     useEffect(() => {
         console.log('Fetching recent reviews...');
         // Fetch recent reviews from the API
-        fetch(`${API_BASE_URL}/reviews/recent?limit=4`)
+        fetch(`${API_BASE_URL}/reviews/recent?limit=5`, {
+            headers: {
+                // Include user ID if available for personalized like status
+                ...(user && { 'user-id': user.id })
+            }
+        })
             .then(response => {
                 console.log('Response status:', response.status);
                 if (!response.ok) {
@@ -24,6 +32,12 @@ function RecentlyReviewed() {
             })
             .then(data => {
                 console.log('Recent reviews:', data);
+                // Debug the structure of the first review
+                if (data.length > 0) {
+                    console.log('First review structure:', JSON.stringify(data[0], null, 2));
+                    console.log('User property exists:', !!data[0].User);
+                    console.log('User property keys:', data[0].User ? Object.keys(data[0].User) : 'N/A');
+                }
                 setRecentReviews(data);
                 setLoading(false);
             })
@@ -32,7 +46,7 @@ function RecentlyReviewed() {
                 setError(error.message);
                 setLoading(false);
             });
-    }, []);
+    }, [user]);
 
     const navigate = useNavigate();
 
@@ -88,13 +102,20 @@ function RecentlyReviewed() {
                                 "
                                 onClick={() => handleAlbumClick(review.albumId)}
                             />
-                            <div>
+                            <div className="flex-1">
                                 <h3 className="font-bold">{review.albumName}</h3>
                                 <div className="text-sm">
-                                    <p className="font-semibold">
-                                        Rating: {formatRating(review.rating)}/5
-                                    </p>
-                                    <p className="text-gray-600 mt-2">
+                                    <div className="flex items-center gap-4 mb-2">
+                                        <p className="font-semibold">
+                                            Rating: {formatRating(review.rating)}/5
+                                        </p>
+                                        <LikeButton 
+                                            reviewId={review.id} 
+                                            initialLikeCount={review.likeCount || 0}
+                                            initialUserLiked={review.userLiked || false}
+                                        />
+                                    </div>
+                                    <p className="text-paragraphColor mt-2">
                                         {review.reviewText.length > 200 
                                             ? `${review.reviewText.substring(0, 200)}...` 
                                             : review.reviewText}
@@ -103,9 +124,9 @@ function RecentlyReviewed() {
                                         Reviewed by{' '}
                                         <span 
                                             className="text-darkTeal cursor-pointer hover:underline"
-                                            onClick={() => handleUserClick(review.user.id)}
+                                            onClick={() => handleUserClick(review.User?.id || review.userId)}
                                         >
-                                            {review.user.name}
+                                            {review.User?.displayName || 'Anonymous User'}
                                         </span>{' '}
                                         on {formatDate(review.createdAt)}
                                     </p>

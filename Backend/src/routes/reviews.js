@@ -2,6 +2,9 @@ import Review from '../models/Review.js';
 import express from 'express';
 import dotenv from 'dotenv';
 import User from '../models/User.js';
+import Like from '../models/Like.js';
+import { Op } from 'sequelize';
+import sequelize from '../config/database.js';
 
 dotenv.config();
 const router = express.Router();
@@ -62,44 +65,118 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET top reviews from the past week
+router.get('/top', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    
+    // Calculate date range (last 7 days)
+    const today = new Date();
+    const lastWeek = new Date(today);
+    lastWeek.setDate(today.getDate() - 7);
+    
+    console.log('Fetching top reviews with date range:', { 
+      from: lastWeek.toISOString(), 
+      to: today.toISOString() 
+    });
+    
+    // First, get all reviews from the past week
+    const recentReviews = await Review.findAll({
+      where: {
+        createdAt: {
+          [Op.gte]: lastWeek,
+          [Op.lte]: today
+        }
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'displayName', 'profileImageUrl']
+        }
+      ]
+    });
+    
+    console.log(`Found ${recentReviews.length} reviews from the past week`);
+    
+    // If no reviews, return empty array
+    if (recentReviews.length === 0) {
+      return res.json([]);
+    }
+    
+    // Get like counts for each review
+    const reviewsWithLikes = await Promise.all(recentReviews.map(async (review) => {
+      const reviewJson = review.toJSON();
+      const likeCount = await Like.count({ where: { reviewId: review.id } });
+      
+      // Check if the current user has liked this review
+      let userLiked = false;
+      const userId = req.headers['user-id'];
+      if (userId) {
+        const userLike = await Like.findOne({
+          where: { userId, reviewId: review.id }
+        });
+        userLiked = !!userLike;
+      }
+      
+      return {
+        ...reviewJson,
+        likeCount,
+        userLiked
+      };
+    }));
+    
+    // Sort by like count (descending)
+    reviewsWithLikes.sort((a, b) => b.likeCount - a.likeCount);
+    
+    // Limit to requested number
+    const topReviews = reviewsWithLikes.slice(0, limit);
+    
+    console.log(`Returning ${topReviews.length} top reviews`);
+    res.json(topReviews);
+  } catch (error) {
+    console.error('Error fetching top reviews:', error);
+    res.status(500).json({ error: 'Failed to fetch top reviews', details: error.message });
+  }
+});
+
 // GET recent reviews with user information
 // IMPORTANT: This route must be defined BEFORE the /:id route
 router.get('/recent', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
     
-    console.log(`Fetching ${limit} recent reviews`);
-    
     const recentReviews = await Review.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ['id', 'displayName', 'profileImageUrl']
-        }
-      ],
       order: [['createdAt', 'DESC']],
-      limit: limit
+      limit: limit,
+      include: [{
+        model: User,
+        attributes: ['id', 'displayName', 'profileImageUrl']
+      }]
     });
     
-    console.log(`Found ${recentReviews.length} recent reviews`);
-    
-    // Format the response to include user information
-    const formattedReviews = recentReviews.map(review => ({
-      id: review.id,
-      albumId: review.albumId,
-      albumName: review.albumName,
-      albumImageUrl: review.albumImageUrl,
-      rating: review.rating,
-      reviewText: review.reviewText,
-      createdAt: review.createdAt,
-      user: {
-        id: review.User.id,
-        name: review.User.displayName,
-        profileImage: review.User.profileImageUrl
+    // Get like counts for each review
+    const reviewsWithLikes = await Promise.all(recentReviews.map(async (review) => {
+      const reviewJson = review.toJSON();
+      const likeCount = await Like.count({ where: { reviewId: review.id } });
+      
+      // Check if the current user has liked this review
+      let userLiked = false;
+      const userId = req.headers['user-id'];
+      if (userId) {
+        const userLike = await Like.findOne({
+          where: { userId, reviewId: review.id }
+        });
+        userLiked = !!userLike;
       }
+      
+      return {
+        ...reviewJson,
+        likeCount,
+        userLiked
+      };
     }));
     
-    res.json(formattedReviews);
+    res.json(reviewsWithLikes);
   } catch (error) {
     console.error('Error fetching recent reviews:', error);
     res.status(500).json({ error: 'Failed to fetch recent reviews' });
@@ -147,21 +224,36 @@ router.get('/user/:userId', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const review = await Review.findByPk(req.params.id, {
-      include: [
-        {
-          model: User,
-          attributes: ['id', 'displayName', 'profileImageUrl']
-        }
-      ]
+      include: [{
+        model: User,
+        attributes: ['id', 'displayName', 'profileImageUrl']
+      }]
     });
     
     if (!review) {
       return res.status(404).json({ error: 'Review not found' });
     }
     
-    res.json(review);
+    // Get like count
+    const likeCount = await Like.count({ where: { reviewId: review.id } });
+    
+    // Check if the current user has liked this review
+    let userLiked = false;
+    const userId = req.headers['user-id'];
+    if (userId) {
+      const userLike = await Like.findOne({
+        where: { userId, reviewId: review.id }
+      });
+      userLiked = !!userLike;
+    }
+    
+    res.json({
+      ...review.toJSON(),
+      likeCount,
+      userLiked
+    });
   } catch (error) {
-    console.error(`Error fetching review ${req.params.id}:`, error);
+    console.error('Error fetching review:', error);
     res.status(500).json({ error: 'Failed to fetch review' });
   }
 });

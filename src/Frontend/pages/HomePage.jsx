@@ -5,6 +5,8 @@ import NewReleases from "../HomePageComponents/NewReleases";
 import HeaderImage from "../HomePageComponents/HeaderImage";
 import CanDoGrid from "../HomePageComponents/CanDoGrid";
 import SpotifyAuthModal from '../components/modals/SpotifyAuthModal/SpotifyAuth';
+import PopularReviews from "../HomePageComponents/PopularReviews.jsx";
+import { useAuth } from '../context/AuthContext.jsx'
 
 function HomePage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +30,7 @@ function HomePage() {
                     <NavBar />
                 </nav>
                 
-                <main className="pt-[525px]">  {/* Matches header height */}
+                <main className="pt-[525px]"> 
                     <div className="
                         heading-text 
                         text-center 
@@ -63,8 +65,10 @@ function HomePage() {
                         <ArtistCard />
                         <h2 className="section-heading text-headingColor">New Releases</h2>
                         <NewReleases />
-                        <h2 className="section-heading text-headingColor">Can Do</h2>
+                        <h2 className="section-heading text-headingColor text-center pt-10">Explore Filtered</h2>
                         <CanDoGrid />
+                        <h2 className="section-heading text-headingColor">Top Reviews This Week</h2>
+                        <PopularReviews />
                     </div>
                 </main>
             </div>

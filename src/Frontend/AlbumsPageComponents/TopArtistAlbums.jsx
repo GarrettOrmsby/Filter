@@ -90,7 +90,7 @@ function TopArtistAlbums() {
                                                 h-[150px] w-[150px]
                                                 rounded-sm
                                                 overflow-hidden
-                                                shadow-lg
+                                                shadow-[0_4px_12px_rgba(0,0,0,0.7)]
                                                 bg-cover bg-center
                                                 group 
                                                 hover:outline hover:outline-3 hover:outline-darkTeal

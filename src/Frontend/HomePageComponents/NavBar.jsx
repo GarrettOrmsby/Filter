@@ -25,7 +25,8 @@ function NavBar() {
                 items-center
                 p-4
                 uppercase
-                leading-normal">
+                leading-normal
+                ">
                     <li className="navitem">
                         <Link to="/">
                             <span>Home Placeholder</span>
@@ -66,11 +67,6 @@ function NavBar() {
                     <li className="navitem collections-page">
                         <Link to="/Filters">
                             <span>Filters</span>
-                        </Link>
-                    </li>
-                    <li className="navitem stats-page">
-                        <Link to="/Playlists">
-                            <span>Playlists</span>
                         </Link>
                     </li>
                     <li className="navitem search-bar">

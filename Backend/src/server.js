@@ -11,8 +11,10 @@ import { spotifySearch } from './services/searchService.js';
 import sequelize from './config/database.js';
 import User, { syncUserModel } from './models/User.js';
 import Review, { syncReviewModel } from './models/Review.js';
+import Like, { syncLikeModel } from './models/Like.js';
 import authRoutes from './routes/auth.js';
 import reviewRoutes from './routes/reviews.js';
+import likeRoutes from './routes/likes.js';
 
 async function initializeDatabase() {
     try {
@@ -21,6 +23,7 @@ async function initializeDatabase() {
 
         await syncUserModel();
         await syncReviewModel();
+        await syncLikeModel();
 
         console.log('Database initialization complete.');
 
@@ -41,6 +44,7 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/likes', likeRoutes);
 
 app.get('/api/top-artists-full', async (req, res) => {
     try {
