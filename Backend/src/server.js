@@ -40,9 +40,18 @@ dotenv.config();
 
 const app = express();
 
-
-app.use(cors());
+// Update CORS configuration
+app.use(cors({
+    origin: '*', // For testing - we'll make this more specific later
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
 app.use(express.json());
+
+// Add a test route
+app.get('/', (req, res) => {
+    res.json({ message: 'Filterd API is running' });
+});
 
 app.use('/auth', authRoutes);
 app.use('/api/reviews', reviewRoutes);
