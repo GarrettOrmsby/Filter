@@ -1,5 +1,4 @@
 import express, { application } from 'express';
-import { useParams } from 'react-router-dom';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { getTopArtistsWithCache } from './services/artistsCache.js';
