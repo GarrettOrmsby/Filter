@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 function UserReviews({ userId }) {
     const [reviews, setReviews] = useState([]);
@@ -16,7 +17,7 @@ function UserReviews({ userId }) {
     const fetchReviews = async () => {
         try {
             const response = await fetch(
-                `http://localhost:3001/api/reviews/user/${userId}?page=${page}&limit=${reviewsPerPage}`
+                `${API_BASE_URL}/reviews/user/${userId}?page=${page}&limit=${reviewsPerPage}`
             );
             if (!response.ok) throw new Error('Failed to fetch reviews');
             const data = await response.json();

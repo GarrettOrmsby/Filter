@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { API_BASE_URL } from '../config';
 
 function FavoriteAlbums({ userId }) {
     const [favorites, setFavorites] = useState([]);
@@ -29,7 +30,7 @@ function FavoriteAlbums({ userId }) {
     const fetchFavorites = async () => {
         try {
             console.log('Fetching favorites for userId:', userId);
-            const response = await fetch(`http://localhost:3001/api/users/${userId}/favorites`);
+            const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites`);
             if (!response.ok) throw new Error('Failed to fetch favorites');
             const data = await response.json();
             console.log('Fetched favorites:', data);
@@ -47,7 +48,7 @@ function FavoriteAlbums({ userId }) {
 
         setIsSearching(true);
         try {
-            const response = await fetch(`http://localhost:3001/api/search/${encodeURIComponent(query)}`);
+            const response = await fetch(`${API_BASE_URL}/search/${encodeURIComponent(query)}`);
             const data = await response.json();
             setSearchResults(data.albums?.items || []);
         } catch (error) {
@@ -75,7 +76,7 @@ function FavoriteAlbums({ userId }) {
 
     const handleSave = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/api/users/${userId}/favorites`, {
+            const response = await fetch(`${API_BASE_URL}/users/${userId}/favorites`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

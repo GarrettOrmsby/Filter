@@ -5,13 +5,13 @@ import AlbumImageAndCounts from '../ReviewPageComponents/AlbumImageAndCounts';
 import ReviewSection from '../ReviewPageComponents/ReviewSection';
 import NavBar from '../HomePageComponents/NavBar';
 import { fetchAlbumDetails } from '../services/api';
+import { API_BASE_URL } from '../config';
 
 function ReviewPage() {
     const { id } = useParams();
     const [album, setAlbum] = useState(null);
     const [artistImage, setArtistImage] = useState(null);
     const [error, setError] = useState(null);
-    const API_BASE_URL = 'http://localhost:3001/api';
 
     useEffect(() => {
         if (!id) return;

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import heart from '../../assets/heart.png';
 import heartoutline from '../../assets/heart-outline.png';
+import { API_BASE_URL } from '../config';
 
 function LikeButton({ reviewId, initialLikeCount = 0, initialUserLiked = false }) {
     const [likeCount, setLikeCount] = useState(initialLikeCount);
@@ -31,7 +32,7 @@ function LikeButton({ reviewId, initialLikeCount = 0, initialUserLiked = false }
             setLikeCount(prevCount => newLikedState ? prevCount + 1 : prevCount - 1);
             
             // Send request to server
-            const response = await fetch(`http://localhost:3001/api/likes/toggle/${reviewId}`, {
+            const response = await fetch(`${API_BASE_URL}/likes/toggle/${reviewId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
