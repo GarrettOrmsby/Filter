@@ -3,20 +3,20 @@ import fetch from 'node-fetch';
 import User from '../models/User.js';
 import dotenv from 'dotenv';
 import querystring from 'querystring';
-import { createUser, findOrCreateUser } from '../services/userService.js';
 
 // Load environment variables
 dotenv.config();
 
 const router = express.Router();
 
-// Validate required environment variables
-const requiredEnvVars = ['SPOTIFY_CLIENT_ID', 'SPOTIFY_CLIENT_SECRET', 'NODE_ENV'];
-for (const envVar of requiredEnvVars) {
-    if (!process.env[envVar]) {
-        console.error(`Missing required environment variable: ${envVar}`);
-    }
-}
+// Debug environment variables at startup
+console.log('Environment Variables Debug:', {
+    nodeEnv: process.env.NODE_ENV,
+    frontendUri: process.env.FRONTEND_URI,
+    redirectUri: process.env.SPOTIFY_REDIRECT_URI,
+    hasClientId: !!process.env.SPOTIFY_CLIENT_ID,
+    hasClientSecret: !!process.env.SPOTIFY_CLIENT_SECRET
+});
 
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
@@ -26,34 +26,49 @@ const FRONTEND_URL = process.env.FRONTEND_URI || 'http://localhost:5173';
 const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3001/auth/spotify/callback';
 
 router.get('/spotify', (req, res) => {
-    // Add CSP headers
-    res.setHeader('Content-Security-Policy', "default-src 'self' https://accounts.spotify.com");
-    
-    // Validate configuration
-    if (!CLIENT_ID) {
-        console.error('Missing Spotify Client ID');
-        return res.status(500).json({ error: 'Server configuration error' });
+    try {
+        // Remove CSP header for now as it might be causing issues
+        // res.setHeader('Content-Security-Policy', "default-src 'self' https://accounts.spotify.com");
+        
+        // Validate configuration
+        if (!CLIENT_ID) {
+            throw new Error('Missing Spotify Client ID');
+        }
+
+        if (!REDIRECT_URI) {
+            throw new Error('Missing Redirect URI');
+        }
+
+        console.log('Spotify Auth Request:', {
+            timestamp: new Date().toISOString(),
+            environment: process.env.NODE_ENV,
+            redirectUri: REDIRECT_URI,
+            frontendUrl: FRONTEND_URL,
+            clientIdExists: !!CLIENT_ID,
+            headers: req.headers
+        });
+
+        const scope = 'user-read-private user-read-email user-top-read';
+        
+        const authQueryParams = querystring.stringify({
+            response_type: 'code',
+            client_id: CLIENT_ID,
+            scope: scope,
+            redirect_uri: REDIRECT_URI
+        });
+
+        const authUrl = 'https://accounts.spotify.com/authorize?' + authQueryParams;
+        console.log('Redirecting to:', authUrl);
+        
+        res.redirect(authUrl);
+    } catch (error) {
+        console.error('Spotify auth error:', error);
+        res.status(500).json({ 
+            error: 'Authentication setup failed', 
+            details: error.message,
+            timestamp: new Date().toISOString()
+        });
     }
-
-    console.log('Auth Debug Info:', {
-        environment: process.env.NODE_ENV,
-        redirectUri: REDIRECT_URI,
-        frontendUrl: FRONTEND_URL,
-        clientIdExists: !!CLIENT_ID
-    });
-
-    const scope = 'user-read-private user-read-email user-top-read';
-    
-    const authQueryParams = querystring.stringify({
-        response_type: 'code',
-        client_id: CLIENT_ID,
-        scope: scope,
-        redirect_uri: REDIRECT_URI
-    });
-
-    console.log('Auth URL:', `https://accounts.spotify.com/authorize?${authQueryParams}`);
-    
-    res.redirect('https://accounts.spotify.com/authorize?' + authQueryParams);
 });
 
 router.get('/spotify/callback', async (req, res) => {
