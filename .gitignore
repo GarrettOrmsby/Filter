@@ -26,6 +26,8 @@ dist-ssr
 # Environment variables
 .env.production
 .env
+.env.local
+
 Backend/.env
 Backend./env.production
 
