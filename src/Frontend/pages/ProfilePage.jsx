@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import UserReviews from '../ProfilePageComponents/UserReviews';
 import FavoriteAlbums from '../ProfilePageComponents/FavoriteAlbums';
 import ProfileHeader from '../ProfilePageComponents/ProfileHeader';
+import { fetchUserProfile } from '../services/api';
 
 function ProfilePage() {
     const { userId } = useParams();
@@ -25,22 +26,17 @@ function ProfilePage() {
 
     useEffect(() => {
         if (userId) {
-            fetchProfileData();
+            fetchUserProfile(userId)
+                .then(data => {
+                    setProfileData(data);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    setError(error.message);
+                    setLoading(false);
+                });
         }
     }, [userId]);
-
-    const fetchProfileData = async () => {
-        try {
-            const response = await fetch(`http://localhost:3001/api/users/${userId}`);
-            if (!response.ok) throw new Error('Failed to fetch profile');
-            const data = await response.json();
-            setProfileData(data);
-            setLoading(false);
-        } catch (error) {
-            setError(error.message);
-            setLoading(false);
-        }
-    };
 
     if (loading) return (
         <div className="min-h-screen">

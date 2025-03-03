@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
+import { fetchTopArtists } from '../services/api';
 
 function HeaderImage({ artistImage = null }) {
     const [headerImage, setHeaderImage] = useState(null);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [gradientsVisible, setGradientsVisible] = useState(false);
-    const API_BASE_URL = 'http://localhost:3001/api';
 
     useEffect(() => {
         if (!artistImage) {
             // No image provided, get top artist image
-            fetch(`${API_BASE_URL}/top-artists-full`)
-                .then(response => response.json())
+            fetchTopArtists()
                 .then(data => {
                     // Start fading in gradients immediately
                     setGradientsVisible(true);

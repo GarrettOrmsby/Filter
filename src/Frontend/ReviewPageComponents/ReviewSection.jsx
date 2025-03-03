@@ -5,6 +5,7 @@ import heart from '../../assets/heart.png';
 import heartoutline from '../../assets/heart-outline.png';
 import starrefilled from '../../assets/star-refilled.png';
 import starhalf from '../../assets/star-half.png';
+import { API_BASE_URL } from '../config';
 
 
 function ReviewSection({ album }) {
@@ -38,7 +39,6 @@ function ReviewSection({ album }) {
         setError('');
         setSuccess('');
         
-        // Validation checks
         if (!user) {
             setError('Please sign in to submit a review');
             return;
@@ -54,10 +54,6 @@ function ReviewSection({ album }) {
             return;
         }
         
-        // Debug album object
-        console.log('Album object:', album);
-        
-        // Determine the correct album ID and name based on the album object structure
         const albumId = album.albumId;
         const albumName = album.albumName;
         
@@ -78,10 +74,7 @@ function ReviewSection({ album }) {
                 reviewText: reviewText
             };
             
-            console.log('Submitting review data:', reviewData);
-            console.log('User ID:', user.id);
-            
-            const response = await fetch('http://localhost:3001/api/reviews', {
+            const response = await fetch(`${API_BASE_URL}/reviews`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -92,13 +85,11 @@ function ReviewSection({ album }) {
             });
             
             const responseData = await response.json();
-            console.log('Response:', response.status, responseData);
             
             if (!response.ok) {
                 throw new Error(responseData.error || 'Failed to submit review');
             }
             
-            // Success!
             setSuccess('Your review has been submitted!');
             setReviewText('');
             setRating(0);

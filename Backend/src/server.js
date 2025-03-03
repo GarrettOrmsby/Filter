@@ -42,9 +42,14 @@ const app = express();
 
 // Update CORS configuration
 app.use(cors({
-    origin: '*', // For testing - we'll make this more specific later
+    origin: [
+        'http://localhost:5173',  // Vite dev server
+        'http://localhost:4173',  // Vite preview
+        'https://filtered-8y56.onrender.com'  // Your production frontend
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'user-id']
 }));
 app.use(express.json());
 

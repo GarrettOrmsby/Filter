@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const API_BASE_URL = 'http://localhost:3001/api';
+import { fetchNewReleases } from '../services/api';
 
 function NewReleases() {
     const [releases, setReleases] = useState([]);
-
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const handleAlbumClick = (albumId) => {
@@ -13,17 +12,16 @@ function NewReleases() {
     }
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/new-releases`)
-            .then(response => response.json())
+        fetchNewReleases()
             .then(data => {
                 setReleases(data);
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching new releases:', error);
+                setLoading(false);
             });
     }, []);
-
-    let loading = false;
 
     return (
         <div className="max-w-6xl mx-auto px-4">

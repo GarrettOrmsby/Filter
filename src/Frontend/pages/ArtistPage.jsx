@@ -4,22 +4,16 @@ import { useState, useEffect } from "react";
 import ArtistHeading from "../ArtistPageComponents/ArtistHeading";
 import contentBg from "../../assets/content-bg.4284ab72.png"
 import ArtistsAlbums from "../ArtistPageComponents/ArtistsAlbums";
-
+import { fetchArtistAlbums } from '../services/api';
 
 function ArtistPage() {
     const { id } = useParams();
     const [albums, setAlbums] = useState([]);
     const [artist, setArtist] = useState(null);
     const [error, setError] = useState(null);
-    const API_BASE_URL = 'http://localhost:3001/api';
-
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/specific-artist-albums/${id}`)
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to fetch albums');
-                return response.json();
-            })
+        fetchArtistAlbums(id)
             .then(data => {
                 setAlbums(data);
             })

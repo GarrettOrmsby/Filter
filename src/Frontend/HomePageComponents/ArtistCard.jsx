@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const API_BASE_URL = 'http://localhost:3001/api';
+import { fetchTopArtists } from '../services/api';
 
 function ArtistCard() {
     const [artists, setArtists] = useState([]);
-
     const navigate = useNavigate();
 
     const handleArtistClick = (artistId) => {
@@ -13,8 +11,7 @@ function ArtistCard() {
     }
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/top-artists-full`)
-            .then(response => response.json())
+        fetchTopArtists()
             .then(data => {
                 setArtists(data);
             })
@@ -22,7 +19,6 @@ function ArtistCard() {
                 console.error('Error fetching top artists:', error);
             });
     }, []);
-
 
     // Separate top 2 artists and remaining 3
     const topTwo = artists.slice(0, 2);

@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { useAuth } from '../context/AuthContext';
 import LikeButton from '../components/LikeButton';
-
-const API_BASE_URL = "http://localhost:3001/api"
+import { fetchTopReviews } from '../services/api';
 
 function PopularReviews() {
     const [popularReviews, setPopularReviews] = useState([])
@@ -14,21 +13,7 @@ function PopularReviews() {
 
     useEffect(() => {
         console.log('Fetching top reviews...');
-
-        fetch(`${API_BASE_URL}/reviews/top`, {
-            headers: {
-                ...(user && { 'user-id': user.id })
-            }
-        })
-            .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    return response.json().then(err => {
-                        throw new Error(err.error || 'Failed to fetch top reviews');
-                    });
-                }
-                return response.json();
-            })
+        fetchTopReviews(user?.id)
             .then(data => {
                 console.log('Top reviews:', data);
                 setPopularReviews(data);

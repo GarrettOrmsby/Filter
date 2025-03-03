@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { format } from 'date-fns';
 import { useAuth } from "../context/AuthContext";
 import LikeButton from "../components/LikeButton";
-
-const API_BASE_URL = "http://localhost:3001/api";
+import { API_BASE_URL } from '../config';
 
 function RecentlyReviewed() {
     const [recentReviews, setRecentReviews] = useState([]);

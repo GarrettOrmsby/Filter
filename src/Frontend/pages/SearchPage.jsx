@@ -3,16 +3,14 @@ import NavBar from '../HomePageComponents/NavBar';
 import contentBg from '../../assets/content-bg.4284ab72.png';
 import { useEffect, useState } from "react";
 import SearchResults from '../SearchPageComponents/SearchResults';
-
-const API_BASE_URL = 'http://localhost:3001/api';
+import { searchSpotify } from '../services/api';
 
 function SearchPage() {
     const { query } = useParams();
     const [searchResults, setSearchResults] = useState();
     
     useEffect(() => {
-        fetch(`${API_BASE_URL}/search/${query}`)
-            .then(response => response.json())
+        searchSpotify(query)
             .then(data => setSearchResults(data))
             .catch(error => console.error('Error:', error));
     }, [query]);

@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import { fetchUserProfile } from '../services/api';
 
 // Create the context
 export const AuthContext = createContext(null);
@@ -19,8 +20,7 @@ export const AuthProvider = ({ children }) => {
 
         if (userId && token) {
             // Fetch user data from your backend
-            fetch(`http://localhost:3001/api/users/${userId}`)
-                .then(response => response.json())
+            fetchUserProfile(userId)
                 .then(userData => {
                     console.log('Setting user data:', userData);
                     const userObj = {

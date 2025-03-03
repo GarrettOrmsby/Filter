@@ -4,6 +4,7 @@ import HeaderImage from '../HomePageComponents/HeaderImage';
 import AlbumImageAndCounts from '../ReviewPageComponents/AlbumImageAndCounts';
 import ReviewSection from '../ReviewPageComponents/ReviewSection';
 import NavBar from '../HomePageComponents/NavBar';
+import { fetchAlbumDetails } from '../services/api';
 
 function ReviewPage() {
     const { id } = useParams();
@@ -15,11 +16,7 @@ function ReviewPage() {
     useEffect(() => {
         if (!id) return;
 
-        fetch(`${API_BASE_URL}/album/${id}`)
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to fetch album');
-                return response.json();
-            })
+        fetchAlbumDetails(id)
             .then(albumData => {
                 setAlbum(albumData);
                 
