@@ -18,13 +18,15 @@ export const AuthProvider = ({ children }) => {
         const userId = params.get('userId');
         const token = params.get('token');
 
+        console.log('Auth Debug:', { userId, token, hasExistingUser: !!user });
+
         if (userId && token) {
             // Fetch user data from your backend
             fetchUserProfile(userId)
                 .then(userData => {
-                    console.log('Setting user data:', userData);
+                    console.log('Fetched user data:', userData);
                     const userObj = {
-                        id: parseInt(userId), // Ensure ID is a number
+                        id: parseInt(userId),
                         name: userData.displayName,
                         profileImage: userData.profileImageUrl,
                         token
@@ -37,6 +39,7 @@ export const AuthProvider = ({ children }) => {
                 })
                 .catch(error => {
                     console.error('Error fetching user data:', error);
+                    // Handle error (maybe redirect to login or show error message)
                 });
         }
     }, []);

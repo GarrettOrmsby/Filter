@@ -45,7 +45,8 @@ app.use(cors({
     origin: [
         'http://localhost:5173',  // Vite dev server
         'http://localhost:4173',  // Vite preview
-        'https://filtered-8y56.onrender.com'  // Your production frontend
+        'https://filtered-sepia.vercel.app',  // Vercel production URL
+        'https://filtered-8y56.onrender.com'  // Render production URL
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,

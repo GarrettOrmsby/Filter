@@ -9,21 +9,23 @@ dotenv.config();
 
 const router = express.Router();
 
+// Clean URLs by removing trailing slashes
+const cleanUrl = (url) => url ? url.replace(/\/+$/, '') : url;
+
+// Get and clean environment variables
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const FRONTEND_URL = cleanUrl(process.env.FRONTEND_URI) || 'http://localhost:5173';
+const REDIRECT_URI = cleanUrl(process.env.SPOTIFY_REDIRECT_URI) || 'http://localhost:3001/auth/spotify/callback';
+
 // Debug environment variables at startup
 console.log('Environment Variables Debug:', {
     nodeEnv: process.env.NODE_ENV,
-    frontendUri: process.env.FRONTEND_URI,
-    redirectUri: process.env.SPOTIFY_REDIRECT_URI,
-    hasClientId: !!process.env.SPOTIFY_CLIENT_ID,
-    hasClientSecret: !!process.env.SPOTIFY_CLIENT_SECRET
+    frontendUrl: FRONTEND_URL,
+    redirectUri: REDIRECT_URI,
+    hasClientId: !!CLIENT_ID,
+    hasClientSecret: !!CLIENT_SECRET
 });
-
-const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
-const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-
-// Use environment variables for URLs
-const FRONTEND_URL = process.env.FRONTEND_URI || 'http://localhost:5173';
-const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3001/auth/spotify/callback';
 
 router.get('/spotify', (req, res) => {
     try {
@@ -41,11 +43,9 @@ router.get('/spotify', (req, res) => {
 
         console.log('Spotify Auth Request:', {
             timestamp: new Date().toISOString(),
-            environment: process.env.NODE_ENV,
             redirectUri: REDIRECT_URI,
             frontendUrl: FRONTEND_URL,
-            clientIdExists: !!CLIENT_ID,
-            headers: req.headers
+            clientIdExists: !!CLIENT_ID
         });
 
         const scope = 'user-read-private user-read-email user-top-read';
@@ -54,7 +54,8 @@ router.get('/spotify', (req, res) => {
             response_type: 'code',
             client_id: CLIENT_ID,
             scope: scope,
-            redirect_uri: REDIRECT_URI
+            redirect_uri: REDIRECT_URI,
+            show_dialog: true  // Force showing the auth dialog
         });
 
         const authUrl = 'https://accounts.spotify.com/authorize?' + authQueryParams;
