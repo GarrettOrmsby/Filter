@@ -208,11 +208,27 @@ router.get('/album/:albumId', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    const reviews = await Review.findAll({
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const { count, rows: reviews } = await Review.findAndCountAll({
       where: { userId },
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+      include: [{
+        model: User,
+        attributes: ['id', 'displayName', 'profileImageUrl']
+      }]
     });
-    res.json(reviews);
+
+    res.json({
+      reviews,
+      total: count,
+      currentPage: page,
+      totalPages: Math.ceil(count / limit)
+    });
   } catch (error) {
     console.error(`Error fetching reviews for user ${req.params.userId}:`, error);
     res.status(500).json({ error: 'Failed to fetch user reviews' });

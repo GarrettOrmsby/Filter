@@ -15,6 +15,8 @@ import Like, { syncLikeModel } from './models/Like.js';
 import authRoutes from './routes/auth.js';
 import reviewRoutes from './routes/reviews.js';
 import likeRoutes from './routes/likes.js';
+import userRoutes from './routes/users.js';
+import { syncFavoriteAlbumModel } from './models/FavoriteAlbum.js';
 
 async function initializeDatabase() {
     try {
@@ -24,6 +26,7 @@ async function initializeDatabase() {
         await syncUserModel();
         await syncReviewModel();
         await syncLikeModel();
+        await syncFavoriteAlbumModel();
 
         console.log('Database initialization complete.');
 
@@ -45,6 +48,7 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/likes', likeRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/api/top-artists-full', async (req, res) => {
     try {

@@ -6,6 +6,7 @@ import AlbumsPage from './Frontend/pages/AlbumsPage';
 import ReviewPage from './Frontend/pages/ReviewPage';
 import ArtistPage from './Frontend/pages/ArtistPage';
 import SearchPage from './Frontend/pages/SearchPage';
+import ProfilePage from './Frontend/pages/ProfilePage';
 import { AuthProvider } from './Frontend/context/AuthContext';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path='/album/:id' element={<ReviewPage />} />
           <Route path='/artist/:id' element={<ArtistPage />} />
           <Route path='/search/:query' element={<SearchPage />} />
+          <Route path='/user/:userId' element={<ProfilePage />} />
         </Routes>
       </Router>
     </AuthProvider>

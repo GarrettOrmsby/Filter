@@ -51,7 +51,12 @@ function NavBar() {
                                         className="w-8 h-8 rounded-full" 
                                     />
                                 )}
-                                <span>{user.name}</span>
+                                <Link 
+                                    to={`/user/${user.id}`}
+                                    className="hover:text-darkTeal transition-colors"
+                                >
+                                    <span>{user.name}</span>
+                                </Link>
                                 <button 
                                     onClick={logout} 
                                     className="text-sm text-gray-400 hover:text-white"
