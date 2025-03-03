@@ -24,8 +24,10 @@ dist-ssr
 *.sw?
 
 # Environment variables
+.env.production
 .env
 Backend/.env
+Backend./env.production
 
 # Node
 node_modules

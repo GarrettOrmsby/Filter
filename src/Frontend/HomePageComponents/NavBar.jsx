@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import SearchBar from './SearchBar';
 import SpotifyAuthModal from '../components/modals/SpotifyAuthModal/SpotifyAuth';
 import '../../../src/index.css';
+import FilteredLogo from '../../assets/FilteredLogo.png'
 import { useAuth } from '../context/AuthContext';
 
 
@@ -27,7 +28,20 @@ function NavBar() {
             <nav className={`
                 transform transition-transform duration-500 ease-out
                 ${isVisible ? 'translate-y-0' : '-translate-y-full'}
+                flex justify-center w-full
+                relative
+                group
             `}>
+                <div className="
+                    absolute inset-0 
+                    opacity-0 
+                    group-hover:opacity-100 
+                    transition-opacity duration-300
+                    bg-gradient-to-b from-black/20 to-transparent
+                    -z-10
+                    h-[150%]
+                    pointer-events-none
+                "></div>
                 <ul className="
                 flex flex-row 
                 gap-6
@@ -35,11 +49,16 @@ function NavBar() {
                 p-4
                 uppercase
                 leading-normal
+                max-w-5xl
+                justify-center
+                w-full
                 ">
-                    <li className="navitem">
-                        <Link to="/">
-                            <span>Home Placeholder</span>
-                        </Link>
+                    <li className="navitem flex">
+                        <div className="flex items-center gap-2">
+                            <Link to="/">
+                                <span>Filtered</span>
+                            </Link>
+                        </div>
                     </li>
                     <li className="navitem">
                         {user ? (
