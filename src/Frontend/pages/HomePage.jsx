@@ -11,6 +11,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 function HomePage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState(null);
+    const { user } = useAuth();
 
     const handleOpenModal = (type) => {
         setModalType(type);
@@ -42,20 +43,27 @@ function HomePage() {
                         <h1>Keep a diary of your listening journey.</h1>
                         <h1>Focus on the album experience.</h1>
                     </div>
-                    <div className="signup-button text-center text-sm text-headingColor pb-10 z-10">
-                        <button className="
-                            bg-darkTeal 
-                            text-headingColor 
-                            hover:bg-darkTeal/80 
-                            transition-colors 
-                            duration-300 
-                            px-4 py-2 
-                            rounded-md
-                            shadow-[0_4px_12px_rgba(0,0,0,0.7)]
-                            "
-                            onClick={() => handleOpenModal('spotify')}
-                            >Get Started!</button>
-                    </div>
+                    {!user && (
+                        <div className="signup-button text-center text-sm text-headingColor pb-10 z-10">
+                            <button className="
+                                bg-darkTeal 
+                                text-headingColor 
+                                hover:bg-darkTeal/80 
+                                transition-colors 
+                                duration-300 
+                                px-4 py-2 
+                                rounded-md
+                                shadow-[0_4px_12px_rgba(0,0,0,0.7)]
+                                "
+                                onClick={() => handleOpenModal('spotify')}
+                                >Get Started!</button>
+                        </div>
+                    )}
+                    {user && (
+                        <div className="text-center text-md text-headingColor pb-10 z-10">
+                            <p>Welcome back, {user.name}!</p>
+                        </div>
+                    )}
                     <div className="social-quote text-center text-sm text-paragraphColor pb-10 z-10">
                         <p>"Filtered | The premier Letterboxd&trade; ripoff"</p>
                         <p>- The New York Times</p>

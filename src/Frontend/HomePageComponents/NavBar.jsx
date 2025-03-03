@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SearchBar from './SearchBar';
 import SpotifyAuthModal from '../components/modals/SpotifyAuthModal/SpotifyAuth';
 import '../../../src/index.css';
@@ -9,7 +9,13 @@ import { useAuth } from '../context/AuthContext';
 function NavBar() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState(null);
+    const [isVisible, setIsVisible] = useState(false);
     const { user, logout } = useAuth();
+
+    useEffect(() => {
+        // Trigger animation on component mount
+        setIsVisible(true);
+    }, []);
 
     const handleOpenModal = (type) => {
         setModalType(type);
@@ -18,7 +24,10 @@ function NavBar() {
 
     return (
         <header>
-            <nav>
+            <nav className={`
+                transform transition-transform duration-500 ease-out
+                ${isVisible ? 'translate-y-0' : '-translate-y-full'}
+            `}>
                 <ul className="
                 flex flex-row 
                 gap-6
